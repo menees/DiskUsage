@@ -17,7 +17,7 @@ namespace DiskUsage
 		Unknown = 0,
 		Directory = 1,
 		Files = 2,
-		Error = 3
+		Error = 3,
 	}
 
 	#endregion

@@ -24,14 +24,13 @@ namespace DiskUsage
 
 		private const double BytesPerMegabyte = 1048576.0;
 
-		private DirectoryInfo directoryInfo;
+		private readonly DirectoryInfo directoryInfo;
 		private long size;
 		private long fileCount;
 		private long folderCount;
 		private string name;
 		private string fullName;
 		private DirectoryData[] subData;
-		private DirectoryDataType dataType = DirectoryDataType.Directory;
 		private Node treeMapNode = new Node(string.Empty, 0, 0);
 
 		#endregion
@@ -45,30 +44,30 @@ namespace DiskUsage
 
 		public DirectoryData(string name, string fullName, long size, long fileCount)
 		{
-			this.dataType = DirectoryDataType.Files;
+			this.DataType = DirectoryDataType.Files;
 			this.treeMapNode.Tag = this;
 
 			this.SetName(name, fullName);
 			this.SetSize(size);
 			this.fileCount = fileCount;
-			this.subData = new DirectoryData[0];
+			this.subData = CollectionUtility.EmptyArray<DirectoryData>();
 			this.PullNodes();
 		}
 
 		public DirectoryData(string error)
 		{
-			this.dataType = DirectoryDataType.Error;
+			this.DataType = DirectoryDataType.Error;
 			this.treeMapNode.Tag = this;
 
 			this.SetName(error, error);
 			this.SetSize(0);
-			this.subData = new DirectoryData[0];
+			this.subData = CollectionUtility.EmptyArray<DirectoryData>();
 			this.PullNodes();
 		}
 
 		private DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker worker, bool reportProgress)
 		{
-			this.dataType = DirectoryDataType.Directory;
+			this.DataType = DirectoryDataType.Directory;
 			this.treeMapNode.Tag = this;
 
 			this.directoryInfo = directoryInfo;
@@ -92,11 +91,10 @@ namespace DiskUsage
 
 		public string FullName => this.fullName;
 
-		public DirectoryDataType DataType => this.dataType;
+		public DirectoryDataType DataType { get; private set; } = DirectoryDataType.Directory;
 
 		public ICollection<DirectoryData> SubData => this.subData;
 
-		[CLSCompliant(false)]
 		public Node TreeMapNode => this.treeMapNode;
 
 		public void Refresh(BackgroundWorker worker)
@@ -321,12 +319,10 @@ namespace DiskUsage
 					this.directoryInfo.EnumerateDirectories(),
 					info =>
 					{
-						if (CheckCancelled(worker))
+						if (!CheckCancelled(worker))
 						{
-							return;
+							this.CalculateDirectorySize(subDataList, worker, info);
 						}
-
-						this.CalculateDirectorySize(subDataList, worker, info);
 					});
 			}
 			catch (Exception ex)
@@ -355,7 +351,7 @@ namespace DiskUsage
 			long treeMapSize = Math.Max(size, 1);
 			this.treeMapNode.SizeMetric = treeMapSize;
 
-			switch (this.dataType)
+			switch (this.DataType)
 			{
 				case DirectoryDataType.Directory:
 				case DirectoryDataType.Files:
@@ -366,7 +362,7 @@ namespace DiskUsage
 					const int HighestLog = 9;
 					double log = Math.Max(LowestLog, Math.Log10(treeMapSize));
 					double metric = ((log - LowestLog) / (HighestLog - LowestLog)) * 100;
-					if (this.dataType == DirectoryDataType.Files)
+					if (this.DataType == DirectoryDataType.Files)
 					{
 						metric = -metric;
 					}
@@ -393,7 +389,7 @@ namespace DiskUsage
 
 		private void UpdateToolTip()
 		{
-			switch (this.dataType)
+			switch (this.DataType)
 			{
 				case DirectoryDataType.Directory:
 				case DirectoryDataType.Files:
@@ -411,7 +407,9 @@ namespace DiskUsage
 			// If multiple threads are calculating sub-directory sizes, then the parent directory size
 			// can be adjusted simultaneously.  We need to lock on some member to ensure the size
 			// is safely adjusted along with all dependent info (e.g., tree map size).
+#pragma warning disable CA2002 // Do not lock on objects with weak identity. There is only one AppDomain in use in this process.
 			lock (this.directoryInfo)
+#pragma warning restore CA2002 // Do not lock on objects with weak identity
 			{
 				this.SetSize(this.size + sizeAdjustment);
 			}
