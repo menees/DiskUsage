@@ -31,8 +31,6 @@ namespace DiskUsage
 		private ToolStripSeparator toolStripMenuItem3;
 		private ToolStripMenuItem mnuExit;
 		private ToolStripMenuItem mnuHelp;
-		private ToolStripMenuItem mnuReadme;
-		private ToolStripSeparator toolStripMenuItem1;
 		private ToolStripMenuItem mnuAbout;
 		private ContextMenuStrip TreeCtxMenu;
 		private ToolStripMenuItem mnuRefreshBranch2;
@@ -95,8 +93,6 @@ namespace DiskUsage
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuReadme = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.Status = new System.Windows.Forms.StatusStrip();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -295,29 +291,15 @@ namespace DiskUsage
 			// mnuHelp
 			// 
 			this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuReadme,
-            this.toolStripMenuItem1,
             this.mnuAbout});
 			this.mnuHelp.Name = "mnuHelp";
 			this.mnuHelp.Size = new System.Drawing.Size(44, 20);
 			this.mnuHelp.Text = "&Help";
 			// 
-			// mnuReadme
-			// 
-			this.mnuReadme.Name = "mnuReadme";
-			this.mnuReadme.Size = new System.Drawing.Size(156, 22);
-			this.mnuReadme.Text = "&DiskUsage.docx";
-			this.mnuReadme.Click += new System.EventHandler(this.Readme_Click);
-			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 6);
-			// 
 			// mnuAbout
 			// 
 			this.mnuAbout.Name = "mnuAbout";
-			this.mnuAbout.Size = new System.Drawing.Size(156, 22);
+			this.mnuAbout.Size = new System.Drawing.Size(180, 22);
 			this.mnuAbout.Text = "&About...";
 			this.mnuAbout.Click += new System.EventHandler(this.About_Click);
 			// 

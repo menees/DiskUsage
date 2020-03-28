@@ -390,12 +390,6 @@ namespace DiskUsage
 			SetDirectoryNodeImage(e.Node);
 		}
 
-		private void Readme_Click(object sender, System.EventArgs e)
-		{
-			string fileName = FileUtility.ExpandFileName("DiskUsage.docx");
-			WindowsUtility.ShellExecute(this, fileName);
-		}
-
 		private void About_Click(object sender, System.EventArgs e)
 		{
 			WindowsUtility.ShowAboutBox(this, Assembly.GetExecutingAssembly());
