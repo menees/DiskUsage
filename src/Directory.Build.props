@@ -1,0 +1,49 @@
+<Project>
+	<PropertyGroup>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<Authors>Bill Menees</Authors>
+		<PackageProjectUrl>http://www.menees.com</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/bmenees/DiskUsage</RepositoryUrl>
+		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+		<SignAssembly>true</SignAssembly>
+		<LangVersion>latest</LangVersion>
+		<Copyright>Copyright © 2012-2020 Bill Menees</Copyright>
+
+		<!-- These paths must be relative to the projects that include the property (not to this .props file). -->
+		<CodeAnalysisRuleSet>../DiskUsage.ruleset</CodeAnalysisRuleSet>
+		<AssemblyOriginatorKeyFile>../DiskUsage.snk</AssemblyOriginatorKeyFile>
+
+		<!-- Make the assembly, file, and NuGet package versions the same. -->
+		<Version>3.3.2</Version>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<DefineConstants>TRACE</DefineConstants>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="codecracker.CSharp" Version="1.1.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Menees.Analyzers.2017" Version="2.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+</Project>
