@@ -1,0 +1,25 @@
+name: windows build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.0
+      
+    - name: Build everything
+      run: |
+        & .\eng\build.ps1 -build $true
+      
+    - name: Test artifact publishing
+      run: |
+        & .\eng\build.ps1 -build $false -publish $true
