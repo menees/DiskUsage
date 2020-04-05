@@ -1,4 +1,4 @@
-![windows build](https://github.com/bmenees/DiskUsage/workflows/windows%20build/badge.svg)
+![windows build](https://github.com/menees/DiskUsage/workflows/windows%20build/badge.svg)
 
 # Disk Usage
 

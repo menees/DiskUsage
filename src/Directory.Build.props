@@ -5,7 +5,7 @@
 		<PackageProjectUrl>http://www.menees.com</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/bmenees/DiskUsage</RepositoryUrl>
+		<RepositoryUrl>https://github.com/menees/DiskUsage</RepositoryUrl>
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
 		<SignAssembly>true</SignAssembly>
 		<LangVersion>latest</LangVersion>
