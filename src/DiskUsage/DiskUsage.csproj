@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Menees.Windows.Forms" Version="4.9.3" />
+		<PackageReference Include="Menees.Windows.Forms" Version="4.9.10" />
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
 	</ItemGroup>
 
