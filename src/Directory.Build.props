@@ -9,7 +9,7 @@
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
 		<SignAssembly>true</SignAssembly>
 		<LangVersion>latest</LangVersion>
-		<Copyright>Copyright © 2012-2020 Bill Menees</Copyright>
+		<Copyright>Copyright © 2012-2021 Bill Menees</Copyright>
 
 		<!-- These paths must be relative to the projects that include the property (not to this .props file). -->
 		<CodeAnalysisRuleSet>../DiskUsage.ruleset</CodeAnalysisRuleSet>
