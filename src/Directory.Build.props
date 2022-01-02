@@ -9,39 +9,57 @@
 		<GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
 		<SignAssembly>true</SignAssembly>
 		<LangVersion>latest</LangVersion>
-		<Copyright>Copyright © 2012-2021 Bill Menees</Copyright>
+		<Copyright>Copyright © 2003-$([System.DateTime]::UtcNow.ToString(`yyyy`)) Bill Menees</Copyright>
 
-		<!-- These paths must be relative to the projects that include the property (not to this .props file). -->
-		<CodeAnalysisRuleSet>../DiskUsage.ruleset</CodeAnalysisRuleSet>
-		<AssemblyOriginatorKeyFile>../DiskUsage.snk</AssemblyOriginatorKeyFile>
+		<!-- When TargetFrameworks changes, also update the app's Properties\PublishProfiles\*.pubxml files. -->
+		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+
+		<RepoSrcFolder>$(MSBuildThisFileDirectory)</RepoSrcFolder>
+		<CodeAnalysisRuleSet>$(RepoSrcFolder)DiskUsage.ruleset</CodeAnalysisRuleSet>
+		<AssemblyOriginatorKeyFile>$(RepoSrcFolder)DiskUsage.snk</AssemblyOriginatorKeyFile>
+		<UseCustomCodeAnalyzers>true</UseCustomCodeAnalyzers>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
 		<!-- Make the assembly, file, and NuGet package versions the same. -->
-		<Version>3.3.2</Version>
+		<Version>3.4.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+
+		<!-- Only set the BuildTime's date in Debug builds, so it doesn't force a rebuild every time.-->
+		<!-- https://stackoverflow.com/a/6656553/1882616 -->
+		<BuildTime Condition="'$(BuildTime)' == ''">$([System.DateTime]::UtcNow.ToString(`yyyy-MM-dd 00:00:00Z`))</BuildTime>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<DefineConstants>TRACE</DefineConstants>
+
+		<!-- Set the full BuildTime in Release builds. It will cause a rebuild, but the AssemblyMetadata will be correct. -->
+		<BuildTime Condition="'$(BuildTime)' == ''">$([System.DateTime]::UtcNow.ToString(`yyyy-MM-dd HH:mm:ssZ`))</BuildTime>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<AssemblyMetadata Condition="'$(BuildTime)' != ''" Include="BuildTime" Value="$(BuildTime)" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(UseCustomCodeAnalyzers)">
 		<PackageReference Include="codecracker.CSharp" Version="1.1.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Menees.Analyzers" Version="2.0.4">
+		<PackageReference Include="Menees.Analyzers" Version="3.0.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

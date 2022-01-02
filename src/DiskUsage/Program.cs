@@ -23,7 +23,7 @@ namespace DiskUsage
 		{
 			WindowsUtility.InitializeApplication("Disk Usage", null);
 
-			using (MainForm frmMain = new MainForm())
+			using (MainForm frmMain = new())
 			{
 				Application.Idle += new EventHandler(frmMain.OnIdle);
 				Application.Run(frmMain);

@@ -24,14 +24,15 @@ namespace DiskUsage
 
 		private const double BytesPerMegabyte = 1048576.0;
 
-		private readonly DirectoryInfo directoryInfo;
+		private readonly DirectoryInfo? directoryInfo;
+		private readonly object resourceLock = new();
 		private long size;
 		private long fileCount;
 		private long folderCount;
-		private string name;
-		private string fullName;
+		private string? name;
+		private string? fullName;
 		private DirectoryData[] subData;
-		private Node treeMapNode = new Node(string.Empty, 0, 0);
+		private Node treeMapNode = new(string.Empty, 0, 0);
 
 		#endregion
 
@@ -65,13 +66,14 @@ namespace DiskUsage
 			this.PullNodes();
 		}
 
-		private DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker worker, bool reportProgress)
+		private DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker? worker, bool reportProgress)
 		{
 			this.DataType = DirectoryDataType.Directory;
 			this.treeMapNode.Tag = this;
 
 			this.directoryInfo = directoryInfo;
 			this.SetName(this.directoryInfo.Name, this.directoryInfo.FullName);
+			this.subData = CollectionUtility.EmptyArray<DirectoryData>();
 			this.Refresh(worker, reportProgress);
 		}
 
@@ -87,9 +89,9 @@ namespace DiskUsage
 
 		public long FolderCount => this.folderCount;
 
-		public string Name => this.name;
+		public string Name => this.name!;
 
-		public string FullName => this.fullName;
+		public string FullName => this.fullName!;
 
 		public DirectoryDataType DataType { get; private set; } = DirectoryDataType.Directory;
 
@@ -130,7 +132,7 @@ namespace DiskUsage
 			subDataList.Add(new DirectoryData(prefix + message));
 		}
 
-		private static bool CheckCancelled(BackgroundWorker worker)
+		private static bool CheckCanceled(BackgroundWorker? worker)
 		{
 			bool result = false;
 
@@ -142,7 +144,7 @@ namespace DiskUsage
 			return result;
 		}
 
-		private void Refresh(BackgroundWorker worker, bool reportProgress)
+		private void Refresh(BackgroundWorker? worker, bool reportProgress)
 		{
 			if (this.directoryInfo != null)
 			{
@@ -156,10 +158,10 @@ namespace DiskUsage
 				this.fileCount = 0;
 				this.folderCount = 0;
 
-				List<DirectoryData> subDataList = new List<DirectoryData>();
+				List<DirectoryData> subDataList = new();
 
 				this.CalculateFileSizes(subDataList);
-				if (!CheckCancelled(worker))
+				if (!CheckCanceled(worker))
 				{
 					if (reportProgress)
 					{
@@ -170,7 +172,7 @@ namespace DiskUsage
 						this.CalculateDirectorySizesParallel(subDataList, worker);
 					}
 
-					if (!CheckCancelled(worker))
+					if (!CheckCanceled(worker))
 					{
 						this.subData = new DirectoryData[subDataList.Count];
 						subDataList.CopyTo(this.subData);
@@ -238,7 +240,7 @@ namespace DiskUsage
 				int fileCount = 0;
 				long fileSize = 0;
 				Parallel.ForEach(
-					this.directoryInfo.EnumerateFiles(),
+					this.directoryInfo!.EnumerateFiles(),
 					info =>
 					{
 						Interlocked.Add(ref fileSize, info.Length);
@@ -252,7 +254,7 @@ namespace DiskUsage
 				{
 					// Add a faux node for files
 					const string FilesNodeName = "[Files]";
-					DirectoryData data = new DirectoryData(FilesNodeName, Path.Combine(this.directoryInfo.FullName, FilesNodeName), fileSize, fileCount);
+					DirectoryData data = new(FilesNodeName, Path.Combine(this.directoryInfo.FullName, FilesNodeName), fileSize, fileCount);
 					subDataList.Add(data);
 				}
 			}
@@ -266,11 +268,11 @@ namespace DiskUsage
 			"Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes",
 			Justification = "I don't want an error in one node to stop the whole process.")]
-		private void CalculateDirectorySizesWithProgress(List<DirectoryData> subDataList, BackgroundWorker worker)
+		private void CalculateDirectorySizesWithProgress(List<DirectoryData> subDataList, BackgroundWorker? worker)
 		{
 			try
 			{
-				DirectoryInfo[] directories = this.directoryInfo.GetDirectories();
+				DirectoryInfo[] directories = this.directoryInfo!.GetDirectories();
 
 				// Since we're reporting the directory names as our progress, let's do them in alphabetical order.
 				Array.Sort(directories, (x, y) => string.Compare(x.Name, y.Name, true));
@@ -280,7 +282,7 @@ namespace DiskUsage
 				{
 					DirectoryInfo info = directories[i];
 
-					if (CheckCancelled(worker))
+					if (CheckCanceled(worker))
 					{
 						worker = null;
 						break;
@@ -311,15 +313,15 @@ namespace DiskUsage
 			"Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes",
 			Justification = "I don't want an error in one node to stop the whole process.")]
-		private void CalculateDirectorySizesParallel(List<DirectoryData> subDataList, BackgroundWorker worker)
+		private void CalculateDirectorySizesParallel(List<DirectoryData> subDataList, BackgroundWorker? worker)
 		{
 			try
 			{
 				Parallel.ForEach(
-					this.directoryInfo.EnumerateDirectories(),
+					this.directoryInfo!.EnumerateDirectories(),
 					info =>
 					{
-						if (!CheckCancelled(worker))
+						if (!CheckCanceled(worker))
 						{
 							this.CalculateDirectorySize(subDataList, worker, info);
 						}
@@ -331,11 +333,11 @@ namespace DiskUsage
 			}
 		}
 
-		private void CalculateDirectorySize(List<DirectoryData> subDataList, BackgroundWorker worker, DirectoryInfo info)
+		private void CalculateDirectorySize(List<DirectoryData> subDataList, BackgroundWorker? worker, DirectoryInfo info)
 		{
 			// Never report progress for sub-directories.  It adds too much blocking, which makes things take forever.
 			// Add 1 to the folder count to account for the current directory.
-			DirectoryData data = new DirectoryData(info, worker, false);
+			DirectoryData data = new(info, worker, false);
 			this.AdjustStats(data.Size, data.FileCount, 1 + data.FolderCount, false);
 			lock (subDataList)
 			{
@@ -407,9 +409,7 @@ namespace DiskUsage
 			// If multiple threads are calculating sub-directory sizes, then the parent directory size
 			// can be adjusted simultaneously.  We need to lock on some member to ensure the size
 			// is safely adjusted along with all dependent info (e.g., tree map size).
-#pragma warning disable CA2002 // Do not lock on objects with weak identity. There is only one AppDomain in use in this process.
-			lock (this.directoryInfo)
-#pragma warning restore CA2002 // Do not lock on objects with weak identity
+			lock (this.resourceLock)
 			{
 				this.SetSize(this.size + sizeAdjustment);
 			}

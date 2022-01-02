@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="New Rule Set" Description=" " ToolsVersion="16.0">
+<RuleSet Name="New Rule Set" Description=" " ToolsVersion="17.0">
   <Rules AnalyzerId="CodeCracker.CSharp" RuleNamespace="CodeCracker.CSharp">
     <Rule Id="CC0001" Action="None" />
     <Rule Id="CC0014" Action="None" />
@@ -16,6 +16,10 @@
     <Rule Id="MEN006" Action="Warning" />
     <Rule Id="MEN007" Action="Warning" />
     <Rule Id="MEN010" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeAnalysis.NetAnalyzers" RuleNamespace="Microsoft.CodeAnalysis.NetAnalyzers">
+    <Rule Id="CA1031" Action="Warning" />
+    <Rule Id="CA2002" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
     <Rule Id="CA1062" Action="None" />

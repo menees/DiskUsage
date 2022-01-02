@@ -1,14 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.1;net45</TargetFrameworks>
 		<OutputType>WinExe</OutputType>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Images\App.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Menees.Windows.Forms" Version="4.9.10" />
+		<PackageReference Include="Menees.Windows.Forms" Version="5.0.0" />
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
 	</ItemGroup>
 

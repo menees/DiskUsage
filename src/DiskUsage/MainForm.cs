@@ -29,7 +29,7 @@ namespace DiskUsage
 		private const int FilesImageIndex = 1;
 		private const int FolderImageIndex = 2;
 
-		private Stopwatch stopwatch;
+		private Stopwatch? stopwatch;
 
 		#endregion
 
@@ -40,7 +40,7 @@ namespace DiskUsage
 			this.InitializeComponent();
 
 			// Get the OS's closed folder icon if possible.
-			Icon icon = null;
+			Icon? icon = null;
 			ShellUtility.GetFileTypeInfo("Folder", false, IconOptions.Small | IconOptions.Folder, hIcon => icon = (Icon)Icon.FromHandle(hIcon).Clone());
 			if (icon != null)
 			{
@@ -59,7 +59,7 @@ namespace DiskUsage
 			"Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes",
 			Justification = "Windows Forms doesn't automatically handle errors in OnIdle event handlers.")]
-		internal void OnIdle(object sender, EventArgs e)
+		internal void OnIdle(object? sender, EventArgs e)
 		{
 			try
 			{
@@ -95,7 +95,7 @@ namespace DiskUsage
 
 		private static void AddDirectoryNode(TreeNodeCollection parentNodes, DirectoryData data)
 		{
-			TreeNode node = new TreeNode();
+			TreeNode node = new();
 
 			node.Tag = data;
 			node.ImageIndex = GetImageForData(data);
@@ -170,7 +170,7 @@ namespace DiskUsage
 
 		private static string FormatLongUnits(long value, string unit)
 		{
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 			sb.AppendFormat("{0:N0}", value);
 			sb.Append(' ').Append(unit);
 			if (value != 1)
@@ -188,8 +188,8 @@ namespace DiskUsage
 
 		private void ChoosePath_Click(object sender, System.EventArgs e)
 		{
-			string selectedPath = WindowsUtility.SelectFolder(this, "Select a directory or drive:", null);
-			if (!string.IsNullOrEmpty(selectedPath))
+			string? selectedPath = WindowsUtility.SelectFolder(this, "Select a directory or drive:", null);
+			if (selectedPath.IsNotEmpty())
 			{
 				this.PopulateTree(selectedPath);
 			}
@@ -243,7 +243,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void UpdateStatusBar(string message)
+		private void UpdateStatusBar(string? message)
 		{
 			this.lblStatus.Text = message;
 		}
@@ -288,9 +288,12 @@ namespace DiskUsage
 
 		private void Tree_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
 		{
-			this.UpdateStatusBar(e.Node);
-			this.UpdateMap(e.Node);
-			this.UpdateFolderView(e.Node);
+			if (e.Node != null)
+			{
+				this.UpdateStatusBar(e.Node);
+				this.UpdateMap(e.Node);
+				this.UpdateFolderView(e.Node);
+			}
 		}
 
 		private void UpdateMap(TreeNode treeNode)
@@ -367,18 +370,21 @@ namespace DiskUsage
 		private void Tree_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
 #pragma warning restore CC0091 // Use static method
 		{
-			TreeNode node = e.Node;
-
-			SetDirectoryNodeImage(node);
-
-			if (node.FirstNode is DummyNode)
+			if (e.Node != null)
 			{
-				node.Nodes.Clear();
+				TreeNode node = e.Node;
 
-				DirectoryData data = GetDataForNode(node);
-				foreach (DirectoryData childData in data.SubData)
+				SetDirectoryNodeImage(node);
+
+				if (node.FirstNode is DummyNode)
 				{
-					AddDirectoryNode(node.Nodes, childData);
+					node.Nodes.Clear();
+
+					DirectoryData data = GetDataForNode(node);
+					foreach (DirectoryData childData in data.SubData)
+					{
+						AddDirectoryNode(node.Nodes, childData);
+					}
 				}
 			}
 		}
@@ -387,7 +393,10 @@ namespace DiskUsage
 		private void Tree_BeforeCollapse(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
 #pragma warning restore CC0091 // Use static method
 		{
-			SetDirectoryNodeImage(e.Node);
+			if (e.Node != null)
+			{
+				SetDirectoryNodeImage(e.Node);
+			}
 		}
 
 		private void About_Click(object sender, System.EventArgs e)
@@ -395,33 +404,38 @@ namespace DiskUsage
 			WindowsUtility.ShowAboutBox(this, Assembly.GetExecutingAssembly());
 		}
 
-		private void Drive_Click(object sender, EventArgs e)
+		private void Drive_Click(object? sender, EventArgs e)
 		{
-			ToolStripMenuItem mi = (ToolStripMenuItem)sender;
-			DriveInfo drive = (DriveInfo)mi.Tag;
-			this.PopulateTree(drive.RootDirectory.FullName);
+			ToolStripMenuItem? mi = (ToolStripMenuItem?)sender;
+			if (mi != null)
+			{
+				DriveInfo drive = (DriveInfo)mi.Tag;
+				this.PopulateTree(drive.RootDirectory.FullName);
+			}
 		}
 
 #pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
 		private void MainWorker_DoWork(object sender, DoWorkEventArgs e)
 #pragma warning restore CC0091 // Use static method
 		{
-			string directoryName = (string)e.Argument;
+			string? directoryName = (string?)e.Argument;
+			if (directoryName.IsNotEmpty())
+			{
+				DirectoryInfo dirInfo = new(directoryName);
 
-			DirectoryInfo dirInfo = new DirectoryInfo(directoryName);
+				// This does all the directory walking and sizing.
+				BackgroundWorker bw = (BackgroundWorker)sender;
+				DirectoryData data = new(dirInfo, bw);
 
-			// This does all the directory walking and sizing.
-			BackgroundWorker bw = (BackgroundWorker)sender;
-			DirectoryData data = new DirectoryData(dirInfo, bw);
-
-			e.Result = data;
-			e.Cancel = bw.CancellationPending;
+				e.Result = data;
+				e.Cancel = bw.CancellationPending;
+			}
 		}
 
 		private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			this.Progress.Value = e.ProgressPercentage;
-			string directory = (string)e.UserState;
+			string? directory = (string?)e.UserState;
 			this.UpdateStatusBar(directory);
 		}
 
@@ -433,7 +447,7 @@ namespace DiskUsage
 				this.Map.BeginUpdate();
 				try
 				{
-					DirectoryData data;
+					DirectoryData? data;
 					if (e.Error != null)
 					{
 						data = new DirectoryData(e.Error.Message);
@@ -444,7 +458,7 @@ namespace DiskUsage
 					}
 					else
 					{
-						data = (DirectoryData)e.Result;
+						data = (DirectoryData?)e.Result ?? new DirectoryData("Empty");
 					}
 
 					// This populates the root of the tree.
@@ -460,8 +474,11 @@ namespace DiskUsage
 					}
 
 					// Show the total time it took.
-					this.stopwatch.Stop();
-					this.UpdateStatusBar(this.stopwatch.Elapsed);
+					if (this.stopwatch != null)
+					{
+						this.stopwatch.Stop();
+						this.UpdateStatusBar(this.stopwatch.Elapsed);
+					}
 				}
 				finally
 				{
@@ -471,7 +488,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void Cancel_Click(object sender, EventArgs e)
+		private void Cancel_Click(object? sender, EventArgs e)
 		{
 			if (this.MainWorker.IsBusy && !this.MainWorker.CancellationPending)
 			{
@@ -491,13 +508,16 @@ namespace DiskUsage
 		{
 			e.Result = e.Argument;
 
-			var selection = (Tuple<TreeNode, DirectoryData, DirectoryData>)e.Argument;
-			DirectoryData selectedData = selection.Item2;
+			var selection = (Tuple<TreeNode, DirectoryData, DirectoryData>?)e.Argument;
+			if (selection != null)
+			{
+				DirectoryData selectedData = selection.Item2;
 
-			BackgroundWorker bw = (BackgroundWorker)sender;
-			selectedData.Refresh(bw);
+				BackgroundWorker bw = (BackgroundWorker)sender;
+				selectedData.Refresh(bw);
 
-			e.Cancel = bw.CancellationPending;
+				e.Cancel = bw.CancellationPending;
+			}
 		}
 
 		private void RefreshWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -523,13 +543,12 @@ namespace DiskUsage
 
 						nodes.Clear();
 						string message = e.Error != null ? e.Error.Message : "Cancelled";
-						DirectoryData data = new DirectoryData(message);
+						DirectoryData data = new(message);
 						AddDirectoryNode(nodes, data);
 						this.UpdateStatusBar(message);
 					}
-					else
+					else if (e.Result is Tuple<TreeNode, DirectoryData, DirectoryData> selection)
 					{
-						var selection = (Tuple<TreeNode, DirectoryData, DirectoryData>)e.Result;
 						TreeNode selectedNode = selection.Item1;
 						DirectoryData selectedData = selection.Item2;
 						DirectoryData oldData = selection.Item3;
@@ -577,7 +596,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void Map_SelectedNodeChanged(object sender, EventArgs e)
+		private void Map_SelectedNodeChanged(object? sender, EventArgs e)
 		{
 			Node node = this.Map.SelectedNode;
 			if (node != null)
@@ -590,7 +609,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void Drives_DropDownOpening(object sender, EventArgs e)
+		private void Drives_DropDownOpening(object? sender, EventArgs e)
 		{
 			using (new WaitCursor(this))
 			{
@@ -608,7 +627,7 @@ namespace DiskUsage
 							drive.VolumeLabel,
 							drive.DriveType,
 							percentFree);
-						ToolStripMenuItem mi = new ToolStripMenuItem(text, DiskUsage.Properties.Resources.Drive, this.Drive_Click)
+						ToolStripMenuItem mi = new(text, DiskUsage.Properties.Resources.Drive, this.Drive_Click)
 						{
 							ImageTransparentColor = Color.Magenta,
 							Tag = drive,
@@ -650,7 +669,7 @@ namespace DiskUsage
 						// Now get the remaining path parts, so we can find their tree nodes.
 						string[] parts = fullName.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
-						TreeNode currentNode = rootTreeNode;
+						TreeNode? currentNode = rootTreeNode;
 						foreach (var partName in parts)
 						{
 							currentNode.Expand();
@@ -680,7 +699,7 @@ namespace DiskUsage
 			using (new WaitCursor(this))
 			{
 				DirectoryData data = GetDataForNode(treeNode);
-				string directory = null;
+				string? directory = null;
 				bool clearView = false;
 				switch (data.DataType)
 				{
