@@ -1,6 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<NeutralLanguage>en-US</NeutralLanguage>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 		<Authors>Bill Menees</Authors>
 		<PackageProjectUrl>http://www.menees.com</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,7 +24,7 @@
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
 		<!-- Make the assembly, file, and NuGet package versions the same. -->
-		<Version>3.4.0</Version>
+		<Version>3.4.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
