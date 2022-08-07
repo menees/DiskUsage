@@ -31,7 +31,7 @@
 				int error = Marshal.GetLastWin32Error();
 				if (error != NO_ERROR)
 				{
-					throw new Win32Exception(error);
+					throw new Win32Exception(error, $"Unable to get compressed file size for \"{fileName}\".");
 				}
 			}
 
@@ -52,7 +52,7 @@
 			if (!GetDiskFreeSpace(rootPath, out uint sectorsPerCluster, out uint bytesPerSector, out _, out _))
 			{
 				int error = Marshal.GetLastWin32Error();
-				throw new Win32Exception(error);
+				throw new Win32Exception(error, $"Unable to get cluster size for \"{rootPath}\".");
 			}
 
 			uint result = bytesPerSector * sectorsPerCluster;
