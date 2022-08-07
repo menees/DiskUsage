@@ -9,6 +9,7 @@ namespace DiskUsage
 	using System.Diagnostics;
 	using System.Diagnostics.CodeAnalysis;
 	using System.IO;
+	using System.Runtime.InteropServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Forms;
@@ -26,6 +27,7 @@ namespace DiskUsage
 
 		private readonly DirectoryInfo? directoryInfo;
 		private readonly object resourceLock = new();
+		private readonly uint clusterSize;
 		private long size;
 		private long fileCount;
 		private long folderCount;
@@ -39,7 +41,7 @@ namespace DiskUsage
 		#region Constructors
 
 		public DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker worker)
-			: this(directoryInfo, worker, true)
+			: this(directoryInfo, worker, true, NativeMethods.GetDiskClusterSize(directoryInfo))
 		{
 		}
 
@@ -66,7 +68,7 @@ namespace DiskUsage
 			this.PullNodes();
 		}
 
-		private DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker? worker, bool reportProgress)
+		private DirectoryData(DirectoryInfo directoryInfo, BackgroundWorker? worker, bool reportProgress, uint clusterSize)
 		{
 			this.DataType = DirectoryDataType.Directory;
 			this.treeMapNode.Tag = this;
@@ -74,6 +76,7 @@ namespace DiskUsage
 			this.directoryInfo = directoryInfo;
 			this.SetName(this.directoryInfo.Name, this.directoryInfo.FullName);
 			this.subData = CollectionUtility.EmptyArray<DirectoryData>();
+			this.clusterSize = clusterSize;
 			this.Refresh(worker, reportProgress);
 		}
 
@@ -243,7 +246,8 @@ namespace DiskUsage
 					this.directoryInfo!.EnumerateFiles(),
 					info =>
 					{
-						Interlocked.Add(ref fileSize, info.Length);
+						long sizeOnDisk = this.GetSizeOnDisk(info);
+						Interlocked.Add(ref fileSize, sizeOnDisk);
 						Interlocked.Increment(ref fileCount);
 					});
 
@@ -337,7 +341,7 @@ namespace DiskUsage
 		{
 			// Never report progress for sub-directories.  It adds too much blocking, which makes things take forever.
 			// Add 1 to the folder count to account for the current directory.
-			DirectoryData data = new(info, worker, false);
+			DirectoryData data = new(info, worker, false, this.clusterSize);
 			this.AdjustStats(data.Size, data.FileCount, 1 + data.FolderCount, false);
 			lock (subDataList)
 			{
@@ -428,6 +432,38 @@ namespace DiskUsage
 			{
 				this.RecreateTreeMapNode(true);
 			}
+		}
+
+		private long GetSizeOnDisk(FileInfo info)
+		{
+			long result;
+
+			ExtendedFileAttributes attributes = (ExtendedFileAttributes)info.Attributes;
+			if (!attributes.HasFlag(ExtendedFileAttributes.Pinned)
+				&& (attributes.HasFlag(ExtendedFileAttributes.RecallOnDataAccess)
+					|| attributes.HasFlag(ExtendedFileAttributes.RecallOnOpen)
+					|| attributes.HasFlag(ExtendedFileAttributes.Unpinned)))
+			{
+				// If an on-demand/virtual file isn't available locally (e.g., a non-downloaded OneDrive file), then treat it as size 0.
+				result = 0;
+			}
+			else
+			{
+				if (attributes.HasFlag(ExtendedFileAttributes.Compressed))
+				{
+					result = NativeMethods.GetCompressedFileSize(info.FullName);
+				}
+				else
+				{
+					result = info.Length;
+				}
+
+				// Round up to the next full cluster size to report "size on disk" instead of just "file size".
+				// https://stackoverflow.com/a/3751135/1882616
+				result = ((result + this.clusterSize - 1) / this.clusterSize) * this.clusterSize;
+			}
+
+			return result;
 		}
 
 		#endregion
