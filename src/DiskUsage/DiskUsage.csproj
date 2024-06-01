@@ -4,10 +4,12 @@
 		<OutputType>WinExe</OutputType>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>Images\App.ico</ApplicationIcon>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Menees.Windows.Forms" Version="5.1.1" />
+		<PackageReference Include="System.Resources.Extensions" Version="6.0.0"/>
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
 	</ItemGroup>
 
