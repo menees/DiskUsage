@@ -12,8 +12,8 @@
 		<LangVersion>latest</LangVersion>
 		<Copyright>Copyright © 2003-$([System.DateTime]::UtcNow.ToString(`yyyy`)) Bill Menees</Copyright>
 
-		<!-- When TargetFrameworks changes, also update the app's Properties\PublishProfiles\*.pubxml files. -->
-		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+		<!-- DOTNET_VERSION: Set target frameworks for the build. -->
+		<TargetFrameworks>net48;net10.0-windows</TargetFrameworks>
 
 		<RepoSrcFolder>$(MSBuildThisFileDirectory)</RepoSrcFolder>
 		<CodeAnalysisRuleSet>$(RepoSrcFolder)DiskUsage.ruleset</CodeAnalysisRuleSet>
@@ -25,7 +25,7 @@
 		<_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
 
 		<!-- Make the assembly and file versions the same. -->
-		<Version>3.5.0</Version>
+		<Version>3.6.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -53,15 +53,17 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Menees.Analyzers" Version="3.0.9">
+		<PackageReference Include="Menees.Analyzers" Version="4.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+
+		<!-- DOTNET_VERSION: Use NetAnalyzers from current .NET target. -->
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

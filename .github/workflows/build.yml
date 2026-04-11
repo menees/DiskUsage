@@ -8,20 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-2025-vs2026 # DOTNET_VERSION: Ensure required build tools are available.
 
     steps:
     - uses: actions/checkout@v4.1.5
-    
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4.0.0
       with:
-        dotnet-version: 6.0.x
-      
+        dotnet-version: 10.0.x # DOTNET_VERSION: Update YAML pipeline target.
+
     - name: Build everything
       run: |
         & .\eng\build.ps1 -build $true
-      
+
     - name: Test artifact publishing
       run: |
         & .\eng\build.ps1 -build $false -publish $true

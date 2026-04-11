@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path="eng/build.ps1" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Src/">
+    <File Path="src/Directory.Build.props" />
+    <File Path="src/DiskUsage.ruleset" />
+  </Folder>
+  <Project Path="src/DiskUsage/DiskUsage.csproj" />
+</Solution>

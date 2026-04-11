@@ -95,12 +95,13 @@ namespace DiskUsage
 
 		private static void AddDirectoryNode(TreeNodeCollection parentNodes, DirectoryData data)
 		{
-			TreeNode node = new();
-
-			node.Tag = data;
-			node.ImageIndex = GetImageForData(data);
+			TreeNode node = new()
+			{
+				Tag = data,
+				ImageIndex = GetImageForData(data),
+				Name = data.Name, // Map_NodeDoubleClick needs this so Nodes.IndexOfKey will work.
+			};
 			node.SelectedImageIndex = node.ImageIndex;
-			node.Name = data.Name;   // Map_NodeDoubleClick needs this so Nodes.IndexOfKey will work.
 			SetNodeText(node, data);
 
 			parentNodes.Add(node);
@@ -138,13 +139,14 @@ namespace DiskUsage
 			node.Text = string.Format("{0}: {1:N1} MB", data.Name, data.SizeInMegabytes);
 		}
 
-		private static DirectoryData GetDataForNode(TreeNode node) => (DirectoryData)node.Tag;
+		private static DirectoryData GetDataForNode(TreeNode node)
+			=> node.Tag as DirectoryData ?? throw new InvalidOperationException("Tag should contain DirectoryData");
 
 		private static DirectoryData GetDataForNode(Node node) => (DirectoryData)node.Tag;
 
 		private static string GetSuffix(double value) => Math.Round(value, 2) == 1 ? string.Empty : "s";
 
-		private static bool IsNodeADirectory(TreeNode node)
+		private static bool IsNodeADirectory(TreeNode? node)
 		{
 			bool result = false;
 
@@ -316,7 +318,7 @@ namespace DiskUsage
 
 		private void RefreshBranch_Click(object sender, System.EventArgs e)
 		{
-			TreeNode selectedNode = this.Tree.SelectedNode;
+			TreeNode? selectedNode = this.Tree.SelectedNode;
 			if (selectedNode != null)
 			{
 				// Force it to collapse first since we're populating the tree on-demand.
@@ -333,7 +335,7 @@ namespace DiskUsage
 
 		private void OpenFolder_Click(object sender, System.EventArgs e)
 		{
-			TreeNode selectedNode = this.Tree.SelectedNode;
+			TreeNode? selectedNode = this.Tree.SelectedNode;
 			if (selectedNode != null)
 			{
 				DirectoryData selectedData = GetDataForNode(selectedNode);
@@ -346,10 +348,10 @@ namespace DiskUsage
 
 		private void Tree_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			TreeNode node = this.Tree.GetNodeAt(e.X, e.Y);
+			TreeNode? node = this.Tree.GetNodeAt(e.X, e.Y);
 			if (node != null)
 			{
-				TreeNode previouslySelectedNode = this.Tree.SelectedNode;
+				TreeNode? previouslySelectedNode = this.Tree.SelectedNode;
 				this.Tree.SelectedNode = node;
 
 				// If the user re-clicks the same node, then we need to resync the
@@ -409,7 +411,7 @@ namespace DiskUsage
 			ToolStripMenuItem? mi = (ToolStripMenuItem?)sender;
 			if (mi != null)
 			{
-				DriveInfo drive = (DriveInfo)mi.Tag;
+				DriveInfo drive = mi.Tag as DriveInfo ?? throw new InvalidOperationException("Tag should contain a DriveInfo");
 				this.PopulateTree(drive.RootDirectory.FullName);
 			}
 		}
@@ -530,7 +532,7 @@ namespace DiskUsage
 				{
 					if (e.Error != null || e.Cancelled)
 					{
-						TreeNode selectedNode = this.Tree.SelectedNode;
+						TreeNode? selectedNode = this.Tree.SelectedNode;
 						TreeNodeCollection nodes;
 						if (selectedNode != null)
 						{
@@ -563,7 +565,7 @@ namespace DiskUsage
 						}
 
 						// Recalculate the stats for everything above it.
-						TreeNode parentNode = selectedNode.Parent;
+						TreeNode? parentNode = selectedNode.Parent;
 						long sizeAdjustment = selectedData.Size - oldData.Size;
 						long fileCountAdjustment = selectedData.FileCount - oldData.FileCount;
 						long folderCountAdjustment = selectedData.FolderCount - oldData.FolderCount;
@@ -667,7 +669,7 @@ namespace DiskUsage
 						fullName = fullName.Remove(0, rootFullName.Length);
 
 						// Now get the remaining path parts, so we can find their tree nodes.
-						string[] parts = fullName.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
+						string[] parts = fullName.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
 
 						TreeNode? currentNode = rootTreeNode;
 						foreach (var partName in parts)

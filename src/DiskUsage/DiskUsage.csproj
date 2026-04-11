@@ -8,8 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Menees.Windows.Forms" Version="5.1.1" />
-		<PackageReference Include="System.Resources.Extensions" Version="6.0.0"/>
+		<PackageReference Include="Menees.Windows.Forms" Version="5.1.2" />
+		<!-- DOTNET_VERSION: Use System.Resources.Extensions from current .NET target. -->
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.5"/>
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
 	</ItemGroup>
 
