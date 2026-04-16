@@ -8,11 +8,56 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Menees.Windows.Forms" Version="5.1.2" />
 		<!-- DOTNET_VERSION: Use System.Resources.Extensions from current .NET target. -->
 		<PackageReference Include="System.Resources.Extensions" Version="10.0.5"/>
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
 	</ItemGroup>
+
+	<Choose>
+		<When Condition="$(UseLocalMeneesLibraries)">
+			<Choose>
+				<When Condition="$(TargetFramework) == 'net48'">
+					<ItemGroup>
+						<Reference Include="Menees.Common" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Common\bin\$(Configuration)\$(LocalMeneesLibrariesFramework)\Menees.Common.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+					<ItemGroup>
+						<Reference Include="Menees.Windows" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows\bin\$(Configuration)\$(LocalMeneesLibrariesFramework)\Menees.Windows.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+					<ItemGroup>
+						<Reference Include="Menees.Windows.Forms" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows.Forms\bin\$(Configuration)\$(LocalMeneesLibrariesFramework)\Menees.Windows.Forms.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+				</When>
+				<Otherwise>
+					<ItemGroup>
+						<Reference Include="Menees.Common" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Common\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)\Menees.Common.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+					<ItemGroup>
+						<Reference Include="Menees.Windows" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)-windows\Menees.Windows.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+					<ItemGroup>
+						<Reference Include="Menees.Windows.Forms" Private="true">
+							<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows.Forms\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)-windows\Menees.Windows.Forms.dll</HintPath>
+						</Reference>
+					</ItemGroup>
+				</Otherwise>
+			</Choose>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Menees.Windows.Forms" Version="6.0.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">

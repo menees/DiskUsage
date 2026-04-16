@@ -23,9 +23,12 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+		<UseLocalMeneesLibraries>false</UseLocalMeneesLibraries>
+		<LocalMeneesLibrariesSrc/>
+		<BuildingInsideVisualStudio Condition="'$(BuildingInsideVisualStudio)' == ''">false</BuildingInsideVisualStudio>
 
 		<!-- Make the assembly and file versions the same. -->
-		<Version>3.6.0</Version>
+		<Version>3.7.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -35,6 +38,13 @@
 		<!-- Only set the BuildTime's date in Debug builds, so it doesn't force a rebuild every time.-->
 		<!-- https://stackoverflow.com/a/6656553/1882616 -->
 		<BuildTime Condition="'$(BuildTime)' == ''">$([System.DateTime]::UtcNow.ToString(`yyyy-MM-dd 00:00:00Z`))</BuildTime>
+
+		<!-- Make debug builds inside VS use local Libraries if available (instead of NuGet packages) to make debugging easier. -->
+		<!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/visual-studio-integration-msbuild#build-solutions -->
+		<LocalMeneesLibrariesSrc>$(RepoSrcFolder)..\..\Libraries\src\</LocalMeneesLibrariesSrc>
+		<UseLocalMeneesLibraries Condition="$(BuildingInsideVisualStudio) and exists($(LocalMeneesLibrariesSrc))">true</UseLocalMeneesLibraries>
+		<LocalMeneesLibrariesFramework>net48</LocalMeneesLibrariesFramework>
+		<LocalMeneesLibrariesFrameworkCoreBase>net10.0</LocalMeneesLibrariesFrameworkCoreBase>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
