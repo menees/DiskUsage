@@ -23,10 +23,14 @@ namespace DiskUsage
 	{
 		#region Private Data Members
 
-		private const double BytesPerMegabyte = 1048576.0;
+		private const double BytesPerMegabyte = 1_048_576.0;
 
 		private readonly DirectoryInfo? directoryInfo;
+#if NET
+		private readonly Lock resourceLock = new();
+#else
 		private readonly object resourceLock = new();
+#endif
 		private readonly uint clusterSize;
 		private long size;
 		private long fileCount;
@@ -36,7 +40,7 @@ namespace DiskUsage
 		private DirectoryData[] subData;
 		private Node treeMapNode = new(string.Empty, 0, 0);
 
-		#endregion
+#endregion
 
 		#region Constructors
 
@@ -96,28 +100,23 @@ namespace DiskUsage
 
 		public string FullName => this.fullName!;
 
-		public DirectoryDataType DataType { get; private set; } = DirectoryDataType.Directory;
+		public DirectoryDataType DataType { get; } = DirectoryDataType.Directory;
 
 		public ICollection<DirectoryData> SubData => this.subData;
 
 		public Node TreeMapNode => this.treeMapNode;
 
+		public bool? Exists => this.directoryInfo?.Exists;
+
 		public void Refresh(BackgroundWorker worker)
 		{
+			this.directoryInfo?.Refresh();
 			this.Refresh(worker, true);
 		}
 
 		public void AdjustStats(long sizeAdjustment, long fileCountAdjustment, long folderCountAdjustment)
 		{
 			this.AdjustStats(sizeAdjustment, fileCountAdjustment, folderCountAdjustment, true);
-		}
-
-		public void Explore(IWin32Window owner)
-		{
-			if (this.directoryInfo != null)
-			{
-				WindowsUtility.ShellExecute(owner, this.directoryInfo.FullName);
-			}
 		}
 
 		public DirectoryData Clone()
@@ -161,7 +160,7 @@ namespace DiskUsage
 				this.fileCount = 0;
 				this.folderCount = 0;
 
-				List<DirectoryData> subDataList = new();
+				List<DirectoryData> subDataList = [];
 
 				this.CalculateFileSizes(subDataList);
 				if (!CheckCanceled(worker))
@@ -302,10 +301,7 @@ namespace DiskUsage
 					this.CalculateDirectorySize(subDataList, worker, info);
 				}
 
-				if (worker != null)
-				{
-					worker.ReportProgress(100, string.Empty);
-				}
+				worker?.ReportProgress(100, string.Empty);
 			}
 			catch (Exception ex)
 			{

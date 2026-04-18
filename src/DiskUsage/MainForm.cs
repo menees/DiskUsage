@@ -3,9 +3,7 @@ namespace DiskUsage
 	#region Using Directives
 
 	using System;
-	using System.Collections;
 	using System.ComponentModel;
-	using System.Data;
 	using System.Diagnostics;
 	using System.Diagnostics.CodeAnalysis;
 	using System.Drawing;
@@ -18,6 +16,7 @@ namespace DiskUsage
 	using Menees.Shell;
 	using Menees.Windows.Forms;
 	using Microsoft.Research.CommunityTechnologies.Treemap;
+	using VB = Microsoft.VisualBasic.FileIO;
 
 	#endregion
 
@@ -29,6 +28,7 @@ namespace DiskUsage
 		private const int FilesImageIndex = 1;
 		private const int FolderImageIndex = 2;
 
+		private readonly bool supportTerminal;
 		private Stopwatch? stopwatch;
 
 		#endregion
@@ -44,9 +44,25 @@ namespace DiskUsage
 			ShellUtility.GetFileTypeInfo("Folder", false, IconOptions.Small | IconOptions.Folder, hIcon => icon = (Icon)Icon.FromHandle(hIcon).Clone());
 			if (icon != null)
 			{
+				this.mnuOpenFolderInFileExplorer.Image = icon.ToBitmap();
+				this.mnuOpenFolderInFileExplorer2.Image = icon.ToBitmap();
 				using (Image folderImage = icon.ToBitmap())
 				{
 					this.Images.Images[FolderImageIndex] = folderImage;
+				}
+			}
+
+			// The icon for the 0-byte wt.exe stub is a generic app icon. The cmd.exe icon looks better.
+			string? terminalPath = ShellUtility.SearchPath("cmd.exe") ?? WindowsUtility.FindWindowsTerminal();
+			if (terminalPath.IsNotEmpty())
+			{
+				this.supportTerminal = true;
+
+				ShellUtility.GetFileTypeInfo(terminalPath, true, IconOptions.Small, hIcon => icon = (Icon)Icon.FromHandle(hIcon).Clone());
+				if (icon != null)
+				{
+					this.mnuOpenFolderInTerminal.Image = icon.ToBitmap();
+					this.mnuOpenFolderInTerminal2.Image = icon.ToBitmap();
 				}
 			}
 		}
@@ -69,12 +85,20 @@ namespace DiskUsage
 				this.mnuRecentPaths.Enabled = !scanning;
 				this.mnuCancel.Enabled = scanning && !this.MainWorker.CancellationPending && !this.RefreshWorker.CancellationPending;
 
-				bool directorySelected = !scanning && IsNodeADirectory(this.Tree.SelectedNode);
+				TreeNode? selectedNode = this.Tree.SelectedNode;
+				bool directorySelected = !scanning && IsNodeADirectory(selectedNode);
+				bool hasParent = selectedNode?.Parent is not null;
 
 				this.mnuRefreshBranch.Enabled = directorySelected;
 				this.mnuRefreshBranch2.Enabled = directorySelected;
-				this.mnuOpenFolder.Enabled = directorySelected;
-				this.mnuOpenFolder2.Enabled = directorySelected;
+				this.mnuOpenFolderInFileExplorer.Enabled = directorySelected;
+				this.mnuOpenFolderInFileExplorer2.Enabled = directorySelected;
+				this.mnuOpenFolderInTerminal.Enabled = directorySelected && this.supportTerminal;
+				this.mnuOpenFolderInTerminal2.Enabled = directorySelected && this.supportTerminal;
+				this.mnuSelectFolderInFileExplorer.Enabled = directorySelected && hasParent;
+				this.mnuSelectFolderInFileExplorer2.Enabled = directorySelected && hasParent;
+				this.mnuDeleteFolder.Enabled = directorySelected && hasParent;
+				this.mnuDeleteFolder2.Enabled = directorySelected && hasParent;
 
 				this.Progress.Visible = scanning;
 				this.lblProgressImage.Visible = scanning;
@@ -147,12 +171,16 @@ namespace DiskUsage
 		private static string GetSuffix(double value) => Math.Round(value, 2) == 1 ? string.Empty : "s";
 
 		private static bool IsNodeADirectory(TreeNode? node)
+			=> IsNodeADirectory(node, out _);
+
+		private static bool IsNodeADirectory(TreeNode? node, [NotNullWhen(true)] out DirectoryData? data)
 		{
 			bool result = false;
+			data = null;
 
 			if (node != null)
 			{
-				DirectoryData data = GetDataForNode(node);
+				data = GetDataForNode(node);
 				result = data.DataType == DirectoryDataType.Directory;
 			}
 
@@ -183,12 +211,12 @@ namespace DiskUsage
 			return sb.ToString();
 		}
 
-		private void Exit_Click(object sender, System.EventArgs e)
+		private void Exit_Click(object sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		private void ChoosePath_Click(object sender, System.EventArgs e)
+		private void ChoosePath_Click(object sender, EventArgs e)
 		{
 			string? selectedPath = WindowsUtility.SelectFolder(this, "Select a directory or drive:", null);
 			if (selectedPath.IsNotEmpty())
@@ -288,7 +316,7 @@ namespace DiskUsage
 			this.UpdateStatusBar(message);
 		}
 
-		private void Tree_AfterSelect(object sender, System.Windows.Forms.TreeViewEventArgs e)
+		private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
 		{
 			if (e.Node != null)
 			{
@@ -316,7 +344,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void RefreshBranch_Click(object sender, System.EventArgs e)
+		private void RefreshBranch_Click(object sender, EventArgs e)
 		{
 			TreeNode? selectedNode = this.Tree.SelectedNode;
 			if (selectedNode != null)
@@ -333,20 +361,54 @@ namespace DiskUsage
 			}
 		}
 
-		private void OpenFolder_Click(object sender, System.EventArgs e)
+		private void OpenFolderInFileExplorer_Click(object sender, EventArgs e)
 		{
-			TreeNode? selectedNode = this.Tree.SelectedNode;
-			if (selectedNode != null)
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
 			{
-				DirectoryData selectedData = GetDataForNode(selectedNode);
-				if (selectedData.DataType == DirectoryDataType.Directory)
+				WindowsUtility.TryOpenExplorerForFolder(selectedData.FullName, select: false, this);
+			}
+		}
+
+		private void OpenFolderInTerminal_Click(object sender, EventArgs e)
+		{
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
+			{
+				WindowsUtility.TryOpenTerminalForFolder(selectedData.FullName, this);
+			}
+		}
+
+		private void SelectFolderInFileExplorer_Click(object sender, EventArgs e)
+		{
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
+			{
+				WindowsUtility.TryOpenExplorerForFolder(selectedData.FullName, select: true, this);
+			}
+		}
+
+		private void DeleteFolder_Click(object sender, EventArgs e)
+		{
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
+			{
+				try
 				{
-					selectedData.Explore(this);
+					// Use the VB command so the recycle bin will be used (and its confirmation if enabled).
+					VB.FileSystem.DeleteDirectory(
+						selectedData.FullName,
+						VB.UIOption.AllDialogs,
+						VB.RecycleOption.SendToRecycleBin,
+						VB.UICancelOption.ThrowException);
+
+					// This will quickly remove the folder's node and update the sizes above it.
+					this.RefreshBranch_Click(sender, e);
+				}
+				catch (OperationCanceledException)
+				{
+					// The user canceled the delete.
 				}
 			}
 		}
 
-		private void Tree_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void Tree_MouseDown(object sender, MouseEventArgs e)
 		{
 			TreeNode? node = this.Tree.GetNodeAt(e.X, e.Y);
 			if (node != null)
@@ -368,9 +430,7 @@ namespace DiskUsage
 			this.OnIdle(sender, e);
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
-		private void Tree_BeforeExpand(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
-#pragma warning restore CC0091 // Use static method
+		private void Tree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
 		{
 			if (e.Node != null)
 			{
@@ -391,9 +451,7 @@ namespace DiskUsage
 			}
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
-		private void Tree_BeforeCollapse(object sender, System.Windows.Forms.TreeViewCancelEventArgs e)
-#pragma warning restore CC0091 // Use static method
+		private void Tree_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
 		{
 			if (e.Node != null)
 			{
@@ -401,7 +459,7 @@ namespace DiskUsage
 			}
 		}
 
-		private void About_Click(object sender, System.EventArgs e)
+		private void About_Click(object sender, EventArgs e)
 		{
 			WindowsUtility.ShowAboutBox(this, Assembly.GetExecutingAssembly());
 		}
@@ -416,9 +474,7 @@ namespace DiskUsage
 			}
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
 		private void MainWorker_DoWork(object sender, DoWorkEventArgs e)
-#pragma warning restore CC0091 // Use static method
 		{
 			string? directoryName = (string?)e.Argument;
 			if (directoryName.IsNotEmpty())
@@ -504,9 +560,7 @@ namespace DiskUsage
 			this.UpdateStatusBar("Cancelling...");
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance event handlers.
 		private void RefreshWorker_DoWork(object sender, DoWorkEventArgs e)
-#pragma warning restore CC0091 // Use static method
 		{
 			e.Result = e.Argument;
 
@@ -587,6 +641,11 @@ namespace DiskUsage
 						if (selectedNode == this.Tree.Nodes[0])
 						{
 							selectedNode.Expand();
+						}
+						else if (selectedData.Exists is false)
+						{
+							// The selected folder was deleted, so remove its node now that the sizes are updated.
+							selectedNode.Remove();
 						}
 					}
 				}
@@ -764,12 +823,10 @@ namespace DiskUsage
 				this.Browser.Stop();
 				this.Browser.Url = null;
 			}
-#pragma warning disable CC0004 // Catch block cannot be empty
 			catch (COMException)
 			{
 				// There's nothing we can do here.  This occurs if the browser is still navigating to the previous URI and can't stop.
 			}
-#pragma warning restore CC0004 // Catch block cannot be empty
 		}
 
 		#endregion

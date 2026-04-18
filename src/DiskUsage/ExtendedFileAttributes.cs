@@ -175,7 +175,7 @@ public enum ExtendedFileAttributes
 	/// Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP:
 	/// This flag is not supported until Windows 8 and Windows Server 2012.
 	/// </remarks>
-	NoScrubData = 131072,
+	NoScrubData = 131_072,
 
 	/// <summary>
 	/// This attribute only appears in directory enumeration classes (FILE_DIRECTORY_INFORMATION,
@@ -186,7 +186,7 @@ public enum ExtendedFileAttributes
 	/// <remarks>
 	/// 0x40000
 	/// </remarks>
-	RecallOnOpen = 262144,
+	RecallOnOpen = 262_144,
 
 	/// <summary>
 	/// This attribute indicates user intent that the file or directory should be kept fully present locally even when not
@@ -195,7 +195,7 @@ public enum ExtendedFileAttributes
 	/// <remarks>
 	/// 0x80000
 	/// </remarks>
-	Pinned = 524288,
+	Pinned = 524_288,
 
 	/// <summary>
 	/// This attribute indicates that the file or directory should not be kept fully present locally except when being
@@ -204,7 +204,7 @@ public enum ExtendedFileAttributes
 	/// <remarks>
 	/// 0x100000
 	/// </remarks>
-	Unpinned = 1048576,
+	Unpinned = 1_048_576,
 
 	/// <summary>
 	/// When this attribute is set, it means that the file or directory is not fully present locally. For a file that means
@@ -216,7 +216,7 @@ public enum ExtendedFileAttributes
 	/// <remarks>
 	/// 0x400000
 	/// </remarks>
-	RecallOnDataAccess = 4194304,
+	RecallOnDataAccess = 4_194_304,
 }
 
 #endregion

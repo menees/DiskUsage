@@ -16,7 +16,6 @@
 		<TargetFrameworks>net48;net10.0-windows</TargetFrameworks>
 
 		<RepoSrcFolder>$(MSBuildThisFileDirectory)</RepoSrcFolder>
-		<CodeAnalysisRuleSet>$(RepoSrcFolder)DiskUsage.ruleset</CodeAnalysisRuleSet>
 		<AssemblyOriginatorKeyFile>$(RepoSrcFolder)DiskUsage.snk</AssemblyOriginatorKeyFile>
 		<UseCustomCodeAnalyzers>true</UseCustomCodeAnalyzers>
 		<Nullable>enable</Nullable>
@@ -59,10 +58,6 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCustomCodeAnalyzers)">
-		<PackageReference Include="codecracker.CSharp" Version="1.1.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Menees.Analyzers" Version="4.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

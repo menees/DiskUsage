@@ -7,7 +7,6 @@
   </Folder>
   <Folder Name="/Src/">
     <File Path="src/Directory.Build.props" />
-    <File Path="src/DiskUsage.ruleset" />
   </Folder>
   <Project Path="src/DiskUsage/DiskUsage.csproj" />
 </Solution>

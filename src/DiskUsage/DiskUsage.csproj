@@ -8,9 +8,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Meziantou.Polyfill" Version="1.0.110">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+
 		<!-- DOTNET_VERSION: Use System.Resources.Extensions from current .NET target. -->
-		<PackageReference Include="System.Resources.Extensions" Version="10.0.5"/>
+		<PackageReference Include="System.Resources.Extensions" Version="10.0.5" />
 		<PackageReference Include="TreemapControl" Version="1.0.2" />
+
+		<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
 	</ItemGroup>
 
 	<Choose>

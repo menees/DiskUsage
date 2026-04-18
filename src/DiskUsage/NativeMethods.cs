@@ -14,7 +14,7 @@
 		#region Private Data Members
 
 		// Value from https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesize
-		private const uint INVALID_FILE_SIZE = 0xFFFFFFFF;
+		private const uint INVALID_FILE_SIZE = 0x_FFFF_FFFF;
 
 		// From winerror.h
 		private const int NO_ERROR = 0;

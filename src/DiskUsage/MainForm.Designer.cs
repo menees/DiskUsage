@@ -27,14 +27,14 @@ namespace DiskUsage
 		private ToolStripMenuItem mnuChoosePath;
 		private ToolStripSeparator toolStripMenuItem2;
 		private ToolStripMenuItem mnuRefreshBranch;
-		private ToolStripMenuItem mnuOpenFolder;
+		private ToolStripMenuItem mnuOpenFolderInFileExplorer;
 		private ToolStripSeparator toolStripMenuItem3;
 		private ToolStripMenuItem mnuExit;
 		private ToolStripMenuItem mnuHelp;
 		private ToolStripMenuItem mnuAbout;
 		private ContextMenuStrip TreeCtxMenu;
 		private ToolStripMenuItem mnuRefreshBranch2;
-		private ToolStripMenuItem mnuOpenFolder2;
+		private ToolStripMenuItem mnuOpenFolderInFileExplorer2;
 		private StatusStrip Status;
 		private ToolStripStatusLabel lblStatus;
 		private ToolStripProgressBar Progress;
@@ -77,7 +77,10 @@ namespace DiskUsage
 			this.Tree = new System.Windows.Forms.TreeView();
 			this.TreeCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.mnuRefreshBranch2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolder2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInTerminal2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuSelectFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuDeleteFolder2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.Images = new System.Windows.Forms.ImageList(this.components);
 			this.FormSave = new Menees.Windows.Forms.FormSaver(this.components);
 			this.Menustrip = new System.Windows.Forms.MenuStrip();
@@ -89,7 +92,10 @@ namespace DiskUsage
 			this.mnuCancel = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuRefreshBranch = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolder = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInTerminal = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuSelectFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuDeleteFolder = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -149,27 +155,57 @@ namespace DiskUsage
 			// 
 			this.TreeCtxMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuRefreshBranch2,
-            this.mnuOpenFolder2});
+            this.mnuOpenFolderInFileExplorer2,
+            this.mnuOpenFolderInTerminal2,
+            this.mnuSelectFolderInFileExplorer2,
+            this.mnuDeleteFolder2});
 			this.TreeCtxMenu.Name = "TreeCtxMenu";
-			this.TreeCtxMenu.Size = new System.Drawing.Size(154, 48);
+			this.TreeCtxMenu.Size = new System.Drawing.Size(221, 136);
 			// 
 			// mnuRefreshBranch2
 			// 
 			this.mnuRefreshBranch2.Image = global::DiskUsage.Properties.Resources.Refresh;
 			this.mnuRefreshBranch2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
 			this.mnuRefreshBranch2.Name = "mnuRefreshBranch2";
-			this.mnuRefreshBranch2.Size = new System.Drawing.Size(153, 22);
+			this.mnuRefreshBranch2.Size = new System.Drawing.Size(220, 22);
 			this.mnuRefreshBranch2.Text = "&Refresh Branch";
 			this.mnuRefreshBranch2.Click += new System.EventHandler(this.RefreshBranch_Click);
 			// 
-			// mnuOpenFolder2
+			// mnuOpenFolderInFileExplorer2
 			// 
-			this.mnuOpenFolder2.Image = global::DiskUsage.Properties.Resources.OpenFolder2;
-			this.mnuOpenFolder2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuOpenFolder2.Name = "mnuOpenFolder2";
-			this.mnuOpenFolder2.Size = new System.Drawing.Size(153, 22);
-			this.mnuOpenFolder2.Text = "&Open Folder";
-			this.mnuOpenFolder2.Click += new System.EventHandler(this.OpenFolder_Click);
+			this.mnuOpenFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.OpenFolder;
+			this.mnuOpenFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuOpenFolderInFileExplorer2.Name = "mnuOpenFolderInFileExplorer2";
+			this.mnuOpenFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
+			this.mnuOpenFolderInFileExplorer2.Text = "Open Folder In File &Explorer";
+			this.mnuOpenFolderInFileExplorer2.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
+			// 
+			// mnuOpenFolderInTerminal2
+			// 
+			this.mnuOpenFolderInTerminal2.Image = global::DiskUsage.Properties.Resources.Terminal;
+			this.mnuOpenFolderInTerminal2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuOpenFolderInTerminal2.Name = "mnuOpenFolderInTerminal2";
+			this.mnuOpenFolderInTerminal2.Size = new System.Drawing.Size(220, 22);
+			this.mnuOpenFolderInTerminal2.Text = "Open Folder In &Terminal";
+			this.mnuOpenFolderInTerminal2.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
+			// 
+			// mnuSelectFolderInFileExplorer2
+			// 
+			this.mnuSelectFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.SelectInParent;
+			this.mnuSelectFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuSelectFolderInFileExplorer2.Name = "mnuSelectFolderInFileExplorer2";
+			this.mnuSelectFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
+			this.mnuSelectFolderInFileExplorer2.Text = "&Select Folder In File Explorer";
+			this.mnuSelectFolderInFileExplorer2.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
+			// 
+			// mnuDeleteFolder2
+			// 
+			this.mnuDeleteFolder2.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
+			this.mnuDeleteFolder2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuDeleteFolder2.Name = "mnuDeleteFolder2";
+			this.mnuDeleteFolder2.Size = new System.Drawing.Size(220, 22);
+			this.mnuDeleteFolder2.Text = "De&lete Folder";
+			this.mnuDeleteFolder2.Click += new System.EventHandler(this.DeleteFolder_Click);
 			// 
 			// Images
 			// 
@@ -205,7 +241,10 @@ namespace DiskUsage
             this.mnuCancel,
             this.toolStripMenuItem2,
             this.mnuRefreshBranch,
-            this.mnuOpenFolder,
+            this.mnuOpenFolderInFileExplorer,
+            this.mnuOpenFolderInTerminal,
+            this.mnuSelectFolderInFileExplorer,
+            this.mnuDeleteFolder,
             this.toolStripMenuItem3,
             this.mnuExit});
 			this.mnuFile.Name = "mnuFile";
@@ -217,7 +256,7 @@ namespace DiskUsage
 			this.mnuDrives.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             mnuDummyDrive});
 			this.mnuDrives.Name = "mnuDrives";
-			this.mnuDrives.Size = new System.Drawing.Size(193, 22);
+			this.mnuDrives.Size = new System.Drawing.Size(276, 22);
 			this.mnuDrives.Text = "&Drives";
 			this.mnuDrives.DropDownOpening += new System.EventHandler(this.Drives_DropDownOpening);
 			// 
@@ -227,34 +266,34 @@ namespace DiskUsage
 			this.mnuChoosePath.ImageTransparentColor = System.Drawing.Color.Fuchsia;
 			this.mnuChoosePath.Name = "mnuChoosePath";
 			this.mnuChoosePath.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.mnuChoosePath.Size = new System.Drawing.Size(193, 22);
+			this.mnuChoosePath.Size = new System.Drawing.Size(276, 22);
 			this.mnuChoosePath.Text = "Choose &Path...";
 			this.mnuChoosePath.Click += new System.EventHandler(this.ChoosePath_Click);
 			// 
 			// mnuRecentPaths
 			// 
 			this.mnuRecentPaths.Name = "mnuRecentPaths";
-			this.mnuRecentPaths.Size = new System.Drawing.Size(193, 22);
+			this.mnuRecentPaths.Size = new System.Drawing.Size(276, 22);
 			this.mnuRecentPaths.Text = "R&ecent Paths";
 			// 
 			// toolStripMenuItem4
 			// 
 			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(190, 6);
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(273, 6);
 			// 
 			// mnuCancel
 			// 
 			this.mnuCancel.Image = global::DiskUsage.Properties.Resources.Cancel;
 			this.mnuCancel.ImageTransparentColor = System.Drawing.Color.Fuchsia;
 			this.mnuCancel.Name = "mnuCancel";
-			this.mnuCancel.Size = new System.Drawing.Size(193, 22);
+			this.mnuCancel.Size = new System.Drawing.Size(276, 22);
 			this.mnuCancel.Text = "&Cancel";
 			this.mnuCancel.Click += new System.EventHandler(this.Cancel_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(190, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(273, 6);
 			// 
 			// mnuRefreshBranch
 			// 
@@ -262,29 +301,58 @@ namespace DiskUsage
 			this.mnuRefreshBranch.ImageTransparentColor = System.Drawing.Color.Fuchsia;
 			this.mnuRefreshBranch.Name = "mnuRefreshBranch";
 			this.mnuRefreshBranch.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.mnuRefreshBranch.Size = new System.Drawing.Size(193, 22);
+			this.mnuRefreshBranch.Size = new System.Drawing.Size(276, 22);
 			this.mnuRefreshBranch.Text = "&Refresh Branch";
 			this.mnuRefreshBranch.Click += new System.EventHandler(this.RefreshBranch_Click);
 			// 
-			// mnuOpenFolder
+			// mnuOpenFolderInFileExplorer
 			// 
-			this.mnuOpenFolder.Image = global::DiskUsage.Properties.Resources.OpenFolder2;
-			this.mnuOpenFolder.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuOpenFolder.Name = "mnuOpenFolder";
-			this.mnuOpenFolder.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.mnuOpenFolder.Size = new System.Drawing.Size(193, 22);
-			this.mnuOpenFolder.Text = "&Open Folder";
-			this.mnuOpenFolder.Click += new System.EventHandler(this.OpenFolder_Click);
+			this.mnuOpenFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.OpenFolder;
+			this.mnuOpenFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuOpenFolderInFileExplorer.Name = "mnuOpenFolderInFileExplorer";
+			this.mnuOpenFolderInFileExplorer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.mnuOpenFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
+			this.mnuOpenFolderInFileExplorer.Text = "Open Folder In &File Explorer";
+			this.mnuOpenFolderInFileExplorer.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
+			// 
+			// mnuOpenFolderInTerminal
+			// 
+			this.mnuOpenFolderInTerminal.Image = global::DiskUsage.Properties.Resources.Terminal;
+			this.mnuOpenFolderInTerminal.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuOpenFolderInTerminal.Name = "mnuOpenFolderInTerminal";
+			this.mnuOpenFolderInTerminal.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+			this.mnuOpenFolderInTerminal.Size = new System.Drawing.Size(276, 22);
+			this.mnuOpenFolderInTerminal.Text = "Open Folder In &Terminal";
+			this.mnuOpenFolderInTerminal.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
+			// 
+			// mnuSelectFolderInFileExplorer
+			// 
+			this.mnuSelectFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.SelectInParent;
+			this.mnuSelectFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuSelectFolderInFileExplorer.Name = "mnuSelectFolderInFileExplorer";
+			this.mnuSelectFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
+			this.mnuSelectFolderInFileExplorer.Text = "&Select Folder In File Explorer";
+			this.mnuSelectFolderInFileExplorer.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
+			// 
+			// mnuDeleteFolder
+			// 
+			this.mnuDeleteFolder.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
+			this.mnuDeleteFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuDeleteFolder.Name = "mnuDeleteFolder";
+			this.mnuDeleteFolder.Size = new System.Drawing.Size(276, 22);
+			this.mnuDeleteFolder.Text = "De&lete Folder";
+			this.mnuDeleteFolder.Click += new System.EventHandler(this.DeleteFolder_Click);
 			// 
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(190, 6);
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(273, 6);
 			// 
 			// mnuExit
 			// 
 			this.mnuExit.Name = "mnuExit";
-			this.mnuExit.Size = new System.Drawing.Size(193, 22);
+			this.mnuExit.Size = new System.Drawing.Size(276, 22);
 			this.mnuExit.Text = "E&xit";
 			this.mnuExit.Click += new System.EventHandler(this.Exit_Click);
 			// 
@@ -299,7 +367,7 @@ namespace DiskUsage
 			// mnuAbout
 			// 
 			this.mnuAbout.Name = "mnuAbout";
-			this.mnuAbout.Size = new System.Drawing.Size(180, 22);
+			this.mnuAbout.Size = new System.Drawing.Size(116, 22);
 			this.mnuAbout.Text = "&About...";
 			this.mnuAbout.Click += new System.EventHandler(this.About_Click);
 			// 
@@ -445,7 +513,6 @@ namespace DiskUsage
 			// RecentPaths
 			// 
 			this.RecentPaths.FormSaver = this.FormSave;
-			this.RecentPaths.Items = new string[0];
 			this.RecentPaths.MenuItem = this.mnuRecentPaths;
 			this.RecentPaths.SettingsNodeName = "Recent Paths";
 			this.RecentPaths.ItemClick += new System.EventHandler<Menees.Windows.Forms.RecentItemClickEventArgs>(this.RecentPaths_ItemClick);
@@ -481,6 +548,13 @@ namespace DiskUsage
 
 		}
 		#endregion
+
+		private ToolStripMenuItem mnuOpenFolderInTerminal;
+		private ToolStripMenuItem mnuDeleteFolder;
+		private ToolStripMenuItem mnuSelectFolderInFileExplorer;
+		private ToolStripMenuItem mnuOpenFolderInTerminal2;
+		private ToolStripMenuItem mnuSelectFolderInFileExplorer2;
+		private ToolStripMenuItem mnuDeleteFolder2;
 	}
 }
 
