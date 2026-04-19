@@ -27,7 +27,7 @@
 		<BuildingInsideVisualStudio Condition="'$(BuildingInsideVisualStudio)' == ''">false</BuildingInsideVisualStudio>
 
 		<!-- Make the assembly and file versions the same. -->
-		<Version>3.7.0</Version>
+		<Version>3.6.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
