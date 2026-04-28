@@ -22,7 +22,7 @@ namespace DiskUsage
 		private System.Windows.Forms.TreeView Tree;
 		private System.Windows.Forms.ImageList Images;
 		private MenuStrip Menustrip;
-		private ToolStripMenuItem mnuFile;
+		private ToolStripMenuItem mnuFolder;
 		private ToolStripMenuItem mnuDrives;
 		private ToolStripMenuItem mnuChoosePath;
 		private ToolStripSeparator toolStripMenuItem2;
@@ -76,42 +76,50 @@ namespace DiskUsage
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.Tree = new System.Windows.Forms.TreeView();
 			this.TreeCtxMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.mnuRefreshBranch2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolderInTerminal2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuSelectFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuDeleteFolder2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.Images = new System.Windows.Forms.ImageList(this.components);
 			this.FormSave = new Menees.Windows.Forms.FormSaver(this.components);
 			this.Menustrip = new System.Windows.Forms.MenuStrip();
-			this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuFolder = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuDrives = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuChoosePath = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuRecentPaths = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-			this.mnuCancel = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-			this.mnuRefreshBranch = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuOpenFolderInTerminal = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuSelectFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
-			this.mnuDeleteFolder = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuCopyFolderName = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuCopyFolderPath = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
 			this.Status = new System.Windows.Forms.StatusStrip();
 			this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-			this.lblProgressImage = new System.Windows.Forms.ToolStripStatusLabel();
 			this.Progress = new System.Windows.Forms.ToolStripProgressBar();
 			this.MainWorker = new System.ComponentModel.BackgroundWorker();
 			this.RefreshWorker = new System.ComponentModel.BackgroundWorker();
 			this.Splitter = new System.Windows.Forms.SplitContainer();
 			this.DetailSplitter = new System.Windows.Forms.SplitContainer();
-			this.Map = new Microsoft.Research.CommunityTechnologies.Treemap.TreemapControl();
 			this.BrowserPanel = new System.Windows.Forms.Panel();
 			this.Browser = new System.Windows.Forms.WebBrowser();
 			this.RecentPaths = new Menees.Windows.Forms.RecentItemList(this.components);
+			this.mnuCopyFolderName2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuCopyFolderPath2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+			this.Map = new Microsoft.Research.CommunityTechnologies.Treemap.TreemapControl();
+			this.mnuRefreshBranch2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInTerminal2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuSelectFolderInFileExplorer2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuDeleteFolder2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuChoosePath = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuCancel = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuRefreshBranch = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuOpenFolderInTerminal = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuSelectFolderInFileExplorer = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuDeleteFolder = new System.Windows.Forms.ToolStripMenuItem();
+			this.lblProgressImage = new System.Windows.Forms.ToolStripStatusLabel();
 			mnuDummyDrive = new System.Windows.Forms.ToolStripMenuItem();
 			this.TreeCtxMenu.SuspendLayout();
 			this.Menustrip.SuspendLayout();
@@ -158,54 +166,13 @@ namespace DiskUsage
             this.mnuOpenFolderInFileExplorer2,
             this.mnuOpenFolderInTerminal2,
             this.mnuSelectFolderInFileExplorer2,
-            this.mnuDeleteFolder2});
+            this.toolStripMenuItem5,
+            this.mnuDeleteFolder2,
+            this.toolStripMenuItem1,
+            this.mnuCopyFolderName2,
+            this.mnuCopyFolderPath2});
 			this.TreeCtxMenu.Name = "TreeCtxMenu";
-			this.TreeCtxMenu.Size = new System.Drawing.Size(221, 136);
-			// 
-			// mnuRefreshBranch2
-			// 
-			this.mnuRefreshBranch2.Image = global::DiskUsage.Properties.Resources.Refresh;
-			this.mnuRefreshBranch2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuRefreshBranch2.Name = "mnuRefreshBranch2";
-			this.mnuRefreshBranch2.Size = new System.Drawing.Size(220, 22);
-			this.mnuRefreshBranch2.Text = "&Refresh Branch";
-			this.mnuRefreshBranch2.Click += new System.EventHandler(this.RefreshBranch_Click);
-			// 
-			// mnuOpenFolderInFileExplorer2
-			// 
-			this.mnuOpenFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.OpenFolder;
-			this.mnuOpenFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuOpenFolderInFileExplorer2.Name = "mnuOpenFolderInFileExplorer2";
-			this.mnuOpenFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
-			this.mnuOpenFolderInFileExplorer2.Text = "Open Folder In File &Explorer";
-			this.mnuOpenFolderInFileExplorer2.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
-			// 
-			// mnuOpenFolderInTerminal2
-			// 
-			this.mnuOpenFolderInTerminal2.Image = global::DiskUsage.Properties.Resources.Terminal;
-			this.mnuOpenFolderInTerminal2.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mnuOpenFolderInTerminal2.Name = "mnuOpenFolderInTerminal2";
-			this.mnuOpenFolderInTerminal2.Size = new System.Drawing.Size(220, 22);
-			this.mnuOpenFolderInTerminal2.Text = "Open Folder In &Terminal";
-			this.mnuOpenFolderInTerminal2.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
-			// 
-			// mnuSelectFolderInFileExplorer2
-			// 
-			this.mnuSelectFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.SelectInParent;
-			this.mnuSelectFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuSelectFolderInFileExplorer2.Name = "mnuSelectFolderInFileExplorer2";
-			this.mnuSelectFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
-			this.mnuSelectFolderInFileExplorer2.Text = "&Select Folder In File Explorer";
-			this.mnuSelectFolderInFileExplorer2.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
-			// 
-			// mnuDeleteFolder2
-			// 
-			this.mnuDeleteFolder2.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
-			this.mnuDeleteFolder2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuDeleteFolder2.Name = "mnuDeleteFolder2";
-			this.mnuDeleteFolder2.Size = new System.Drawing.Size(220, 22);
-			this.mnuDeleteFolder2.Text = "De&lete Folder";
-			this.mnuDeleteFolder2.Click += new System.EventHandler(this.DeleteFolder_Click);
+			this.TreeCtxMenu.Size = new System.Drawing.Size(221, 192);
 			// 
 			// Images
 			// 
@@ -223,7 +190,7 @@ namespace DiskUsage
 			// Menustrip
 			// 
 			this.Menustrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFile,
+            this.mnuFolder,
             this.mnuHelp});
 			this.Menustrip.Location = new System.Drawing.Point(0, 0);
 			this.Menustrip.Name = "Menustrip";
@@ -231,9 +198,9 @@ namespace DiskUsage
 			this.Menustrip.TabIndex = 1;
 			this.Menustrip.Text = "menuStrip1";
 			// 
-			// mnuFile
+			// mnuFolder
 			// 
-			this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mnuFolder.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuDrives,
             this.mnuChoosePath,
             this.mnuRecentPaths,
@@ -244,12 +211,16 @@ namespace DiskUsage
             this.mnuOpenFolderInFileExplorer,
             this.mnuOpenFolderInTerminal,
             this.mnuSelectFolderInFileExplorer,
+            this.toolStripMenuItem7,
             this.mnuDeleteFolder,
+            this.toolStripMenuItem6,
+            this.mnuCopyFolderName,
+            this.mnuCopyFolderPath,
             this.toolStripMenuItem3,
             this.mnuExit});
-			this.mnuFile.Name = "mnuFile";
-			this.mnuFile.Size = new System.Drawing.Size(37, 20);
-			this.mnuFile.Text = "&File";
+			this.mnuFolder.Name = "mnuFolder";
+			this.mnuFolder.Size = new System.Drawing.Size(52, 20);
+			this.mnuFolder.Text = "&Folder";
 			// 
 			// mnuDrives
 			// 
@@ -259,16 +230,6 @@ namespace DiskUsage
 			this.mnuDrives.Size = new System.Drawing.Size(276, 22);
 			this.mnuDrives.Text = "&Drives";
 			this.mnuDrives.DropDownOpening += new System.EventHandler(this.Drives_DropDownOpening);
-			// 
-			// mnuChoosePath
-			// 
-			this.mnuChoosePath.Image = global::DiskUsage.Properties.Resources.ChoosePath;
-			this.mnuChoosePath.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuChoosePath.Name = "mnuChoosePath";
-			this.mnuChoosePath.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.mnuChoosePath.Size = new System.Drawing.Size(276, 22);
-			this.mnuChoosePath.Text = "Choose &Path...";
-			this.mnuChoosePath.Click += new System.EventHandler(this.ChoosePath_Click);
 			// 
 			// mnuRecentPaths
 			// 
@@ -281,68 +242,28 @@ namespace DiskUsage
 			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
 			this.toolStripMenuItem4.Size = new System.Drawing.Size(273, 6);
 			// 
-			// mnuCancel
-			// 
-			this.mnuCancel.Image = global::DiskUsage.Properties.Resources.Cancel;
-			this.mnuCancel.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuCancel.Name = "mnuCancel";
-			this.mnuCancel.Size = new System.Drawing.Size(276, 22);
-			this.mnuCancel.Text = "&Cancel";
-			this.mnuCancel.Click += new System.EventHandler(this.Cancel_Click);
-			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
 			this.toolStripMenuItem2.Size = new System.Drawing.Size(273, 6);
 			// 
-			// mnuRefreshBranch
+			// mnuCopyFolderName
 			// 
-			this.mnuRefreshBranch.Image = global::DiskUsage.Properties.Resources.Refresh;
-			this.mnuRefreshBranch.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuRefreshBranch.Name = "mnuRefreshBranch";
-			this.mnuRefreshBranch.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.mnuRefreshBranch.Size = new System.Drawing.Size(276, 22);
-			this.mnuRefreshBranch.Text = "&Refresh Branch";
-			this.mnuRefreshBranch.Click += new System.EventHandler(this.RefreshBranch_Click);
+			this.mnuCopyFolderName.Image = global::DiskUsage.Properties.Resources.Copy;
+			this.mnuCopyFolderName.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuCopyFolderName.Name = "mnuCopyFolderName";
+			this.mnuCopyFolderName.Size = new System.Drawing.Size(276, 22);
+			this.mnuCopyFolderName.Text = "Copy Folder &Name";
+			this.mnuCopyFolderName.Click += new System.EventHandler(this.CopyFolderName_Click);
 			// 
-			// mnuOpenFolderInFileExplorer
+			// mnuCopyFolderPath
 			// 
-			this.mnuOpenFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.OpenFolder;
-			this.mnuOpenFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Fuchsia;
-			this.mnuOpenFolderInFileExplorer.Name = "mnuOpenFolderInFileExplorer";
-			this.mnuOpenFolderInFileExplorer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.mnuOpenFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
-			this.mnuOpenFolderInFileExplorer.Text = "Open Folder In &File Explorer";
-			this.mnuOpenFolderInFileExplorer.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
-			// 
-			// mnuOpenFolderInTerminal
-			// 
-			this.mnuOpenFolderInTerminal.Image = global::DiskUsage.Properties.Resources.Terminal;
-			this.mnuOpenFolderInTerminal.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mnuOpenFolderInTerminal.Name = "mnuOpenFolderInTerminal";
-			this.mnuOpenFolderInTerminal.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.O)));
-			this.mnuOpenFolderInTerminal.Size = new System.Drawing.Size(276, 22);
-			this.mnuOpenFolderInTerminal.Text = "Open Folder In &Terminal";
-			this.mnuOpenFolderInTerminal.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
-			// 
-			// mnuSelectFolderInFileExplorer
-			// 
-			this.mnuSelectFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.SelectInParent;
-			this.mnuSelectFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mnuSelectFolderInFileExplorer.Name = "mnuSelectFolderInFileExplorer";
-			this.mnuSelectFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
-			this.mnuSelectFolderInFileExplorer.Text = "&Select Folder In File Explorer";
-			this.mnuSelectFolderInFileExplorer.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
-			// 
-			// mnuDeleteFolder
-			// 
-			this.mnuDeleteFolder.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
-			this.mnuDeleteFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mnuDeleteFolder.Name = "mnuDeleteFolder";
-			this.mnuDeleteFolder.Size = new System.Drawing.Size(276, 22);
-			this.mnuDeleteFolder.Text = "De&lete Folder";
-			this.mnuDeleteFolder.Click += new System.EventHandler(this.DeleteFolder_Click);
+			this.mnuCopyFolderPath.Image = global::DiskUsage.Properties.Resources.CopyFolder;
+			this.mnuCopyFolderPath.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuCopyFolderPath.Name = "mnuCopyFolderPath";
+			this.mnuCopyFolderPath.Size = new System.Drawing.Size(276, 22);
+			this.mnuCopyFolderPath.Text = "Copy Folder P&ath";
+			this.mnuCopyFolderPath.Click += new System.EventHandler(this.CopyFolderPath_Click);
 			// 
 			// toolStripMenuItem3
 			// 
@@ -388,14 +309,6 @@ namespace DiskUsage
 			this.lblStatus.Size = new System.Drawing.Size(527, 17);
 			this.lblStatus.Spring = true;
 			this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// lblProgressImage
-			// 
-			this.lblProgressImage.AutoSize = false;
-			this.lblProgressImage.Image = global::DiskUsage.Properties.Resources.FileSearch;
-			this.lblProgressImage.Name = "lblProgressImage";
-			this.lblProgressImage.Size = new System.Drawing.Size(30, 17);
-			this.lblProgressImage.Visible = false;
 			// 
 			// Progress
 			// 
@@ -454,6 +367,73 @@ namespace DiskUsage
 			this.DetailSplitter.SplitterDistance = 194;
 			this.DetailSplitter.TabIndex = 0;
 			// 
+			// BrowserPanel
+			// 
+			this.BrowserPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			this.BrowserPanel.Controls.Add(this.Browser);
+			this.BrowserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.BrowserPanel.Location = new System.Drawing.Point(0, 0);
+			this.BrowserPanel.Name = "BrowserPanel";
+			this.BrowserPanel.Size = new System.Drawing.Size(325, 190);
+			this.BrowserPanel.TabIndex = 0;
+			// 
+			// Browser
+			// 
+			this.Browser.AllowWebBrowserDrop = false;
+			this.Browser.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.Browser.Location = new System.Drawing.Point(0, 0);
+			this.Browser.MinimumSize = new System.Drawing.Size(20, 20);
+			this.Browser.Name = "Browser";
+			this.Browser.ScriptErrorsSuppressed = true;
+			this.Browser.Size = new System.Drawing.Size(321, 186);
+			this.Browser.TabIndex = 0;
+			this.Browser.WebBrowserShortcutsEnabled = false;
+			// 
+			// RecentPaths
+			// 
+			this.RecentPaths.FormSaver = this.FormSave;
+			this.RecentPaths.MenuItem = this.mnuRecentPaths;
+			this.RecentPaths.SettingsNodeName = "Recent Paths";
+			this.RecentPaths.ItemClick += new System.EventHandler<Menees.Windows.Forms.RecentItemClickEventArgs>(this.RecentPaths_ItemClick);
+			// 
+			// mnuCopyFolderName2
+			// 
+			this.mnuCopyFolderName2.Image = global::DiskUsage.Properties.Resources.Copy;
+			this.mnuCopyFolderName2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuCopyFolderName2.Name = "mnuCopyFolderName2";
+			this.mnuCopyFolderName2.Size = new System.Drawing.Size(220, 22);
+			this.mnuCopyFolderName2.Text = "Copy Folder &Name";
+			this.mnuCopyFolderName2.Click += new System.EventHandler(this.CopyFolderName_Click);
+			// 
+			// mnuCopyFolderPath2
+			// 
+			this.mnuCopyFolderPath2.Image = global::DiskUsage.Properties.Resources.CopyFolder;
+			this.mnuCopyFolderPath2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuCopyFolderPath2.Name = "mnuCopyFolderPath2";
+			this.mnuCopyFolderPath2.Size = new System.Drawing.Size(220, 22);
+			this.mnuCopyFolderPath2.Text = "Copy Folder P&ath";
+			this.mnuCopyFolderPath2.Click += new System.EventHandler(this.CopyFolderPath_Click);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(217, 6);
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(217, 6);
+			// 
+			// toolStripMenuItem6
+			// 
+			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+			this.toolStripMenuItem6.Size = new System.Drawing.Size(273, 6);
+			// 
+			// toolStripMenuItem7
+			// 
+			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+			this.toolStripMenuItem7.Size = new System.Drawing.Size(273, 6);
+			// 
 			// Map
 			// 
 			this.Map.AllowDrag = false;
@@ -488,34 +468,126 @@ namespace DiskUsage
 			this.Map.NodeDoubleClick += new Microsoft.Research.CommunityTechnologies.Treemap.TreemapControl.NodeEventHandler(this.Map_NodeDoubleClick);
 			this.Map.SelectedNodeChanged += new System.EventHandler(this.Map_SelectedNodeChanged);
 			// 
-			// BrowserPanel
+			// mnuRefreshBranch2
 			// 
-			this.BrowserPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			this.BrowserPanel.Controls.Add(this.Browser);
-			this.BrowserPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BrowserPanel.Location = new System.Drawing.Point(0, 0);
-			this.BrowserPanel.Name = "BrowserPanel";
-			this.BrowserPanel.Size = new System.Drawing.Size(325, 190);
-			this.BrowserPanel.TabIndex = 0;
+			this.mnuRefreshBranch2.Image = global::DiskUsage.Properties.Resources.Refresh;
+			this.mnuRefreshBranch2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuRefreshBranch2.Name = "mnuRefreshBranch2";
+			this.mnuRefreshBranch2.Size = new System.Drawing.Size(220, 22);
+			this.mnuRefreshBranch2.Text = "&Refresh Branch";
+			this.mnuRefreshBranch2.Click += new System.EventHandler(this.RefreshBranch_Click);
 			// 
-			// Browser
+			// mnuOpenFolderInFileExplorer2
 			// 
-			this.Browser.AllowWebBrowserDrop = false;
-			this.Browser.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.Browser.Location = new System.Drawing.Point(0, 0);
-			this.Browser.MinimumSize = new System.Drawing.Size(20, 20);
-			this.Browser.Name = "Browser";
-			this.Browser.ScriptErrorsSuppressed = true;
-			this.Browser.Size = new System.Drawing.Size(321, 186);
-			this.Browser.TabIndex = 0;
-			this.Browser.WebBrowserShortcutsEnabled = false;
+			this.mnuOpenFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.OpenFolder;
+			this.mnuOpenFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuOpenFolderInFileExplorer2.Name = "mnuOpenFolderInFileExplorer2";
+			this.mnuOpenFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
+			this.mnuOpenFolderInFileExplorer2.Text = "Open Folder In File &Explorer";
+			this.mnuOpenFolderInFileExplorer2.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
 			// 
-			// RecentPaths
+			// mnuOpenFolderInTerminal2
 			// 
-			this.RecentPaths.FormSaver = this.FormSave;
-			this.RecentPaths.MenuItem = this.mnuRecentPaths;
-			this.RecentPaths.SettingsNodeName = "Recent Paths";
-			this.RecentPaths.ItemClick += new System.EventHandler<Menees.Windows.Forms.RecentItemClickEventArgs>(this.RecentPaths_ItemClick);
+			this.mnuOpenFolderInTerminal2.Image = global::DiskUsage.Properties.Resources.Terminal;
+			this.mnuOpenFolderInTerminal2.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuOpenFolderInTerminal2.Name = "mnuOpenFolderInTerminal2";
+			this.mnuOpenFolderInTerminal2.Size = new System.Drawing.Size(220, 22);
+			this.mnuOpenFolderInTerminal2.Text = "Open Folder In &Terminal";
+			this.mnuOpenFolderInTerminal2.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
+			// 
+			// mnuSelectFolderInFileExplorer2
+			// 
+			this.mnuSelectFolderInFileExplorer2.Image = global::DiskUsage.Properties.Resources.SelectInParent;
+			this.mnuSelectFolderInFileExplorer2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuSelectFolderInFileExplorer2.Name = "mnuSelectFolderInFileExplorer2";
+			this.mnuSelectFolderInFileExplorer2.Size = new System.Drawing.Size(220, 22);
+			this.mnuSelectFolderInFileExplorer2.Text = "&Select Folder In File Explorer";
+			this.mnuSelectFolderInFileExplorer2.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
+			// 
+			// mnuDeleteFolder2
+			// 
+			this.mnuDeleteFolder2.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
+			this.mnuDeleteFolder2.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuDeleteFolder2.Name = "mnuDeleteFolder2";
+			this.mnuDeleteFolder2.Size = new System.Drawing.Size(220, 22);
+			this.mnuDeleteFolder2.Text = "De&lete Folder";
+			this.mnuDeleteFolder2.Click += new System.EventHandler(this.DeleteFolder_Click);
+			// 
+			// mnuChoosePath
+			// 
+			this.mnuChoosePath.Image = global::DiskUsage.Properties.Resources.ChoosePath;
+			this.mnuChoosePath.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuChoosePath.Name = "mnuChoosePath";
+			this.mnuChoosePath.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+			this.mnuChoosePath.Size = new System.Drawing.Size(276, 22);
+			this.mnuChoosePath.Text = "Choose &Path...";
+			this.mnuChoosePath.Click += new System.EventHandler(this.ChoosePath_Click);
+			// 
+			// mnuCancel
+			// 
+			this.mnuCancel.Image = global::DiskUsage.Properties.Resources.Cancel;
+			this.mnuCancel.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuCancel.Name = "mnuCancel";
+			this.mnuCancel.Size = new System.Drawing.Size(276, 22);
+			this.mnuCancel.Text = "&Cancel";
+			this.mnuCancel.Click += new System.EventHandler(this.Cancel_Click);
+			// 
+			// mnuRefreshBranch
+			// 
+			this.mnuRefreshBranch.Image = global::DiskUsage.Properties.Resources.Refresh;
+			this.mnuRefreshBranch.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuRefreshBranch.Name = "mnuRefreshBranch";
+			this.mnuRefreshBranch.ShortcutKeys = System.Windows.Forms.Keys.F5;
+			this.mnuRefreshBranch.Size = new System.Drawing.Size(276, 22);
+			this.mnuRefreshBranch.Text = "&Refresh Branch";
+			this.mnuRefreshBranch.Click += new System.EventHandler(this.RefreshBranch_Click);
+			// 
+			// mnuOpenFolderInFileExplorer
+			// 
+			this.mnuOpenFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.OpenFolder;
+			this.mnuOpenFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Fuchsia;
+			this.mnuOpenFolderInFileExplorer.Name = "mnuOpenFolderInFileExplorer";
+			this.mnuOpenFolderInFileExplorer.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.mnuOpenFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
+			this.mnuOpenFolderInFileExplorer.Text = "Open Folder In &File Explorer";
+			this.mnuOpenFolderInFileExplorer.Click += new System.EventHandler(this.OpenFolderInFileExplorer_Click);
+			// 
+			// mnuOpenFolderInTerminal
+			// 
+			this.mnuOpenFolderInTerminal.Image = global::DiskUsage.Properties.Resources.Terminal;
+			this.mnuOpenFolderInTerminal.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuOpenFolderInTerminal.Name = "mnuOpenFolderInTerminal";
+			this.mnuOpenFolderInTerminal.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.O)));
+			this.mnuOpenFolderInTerminal.Size = new System.Drawing.Size(276, 22);
+			this.mnuOpenFolderInTerminal.Text = "Open Folder In &Terminal";
+			this.mnuOpenFolderInTerminal.Click += new System.EventHandler(this.OpenFolderInTerminal_Click);
+			// 
+			// mnuSelectFolderInFileExplorer
+			// 
+			this.mnuSelectFolderInFileExplorer.Image = global::DiskUsage.Properties.Resources.SelectInParent;
+			this.mnuSelectFolderInFileExplorer.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuSelectFolderInFileExplorer.Name = "mnuSelectFolderInFileExplorer";
+			this.mnuSelectFolderInFileExplorer.Size = new System.Drawing.Size(276, 22);
+			this.mnuSelectFolderInFileExplorer.Text = "&Select Folder In File Explorer";
+			this.mnuSelectFolderInFileExplorer.Click += new System.EventHandler(this.SelectFolderInFileExplorer_Click);
+			// 
+			// mnuDeleteFolder
+			// 
+			this.mnuDeleteFolder.Image = global::DiskUsage.Properties.Resources.DeleteFolder;
+			this.mnuDeleteFolder.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mnuDeleteFolder.Name = "mnuDeleteFolder";
+			this.mnuDeleteFolder.Size = new System.Drawing.Size(276, 22);
+			this.mnuDeleteFolder.Text = "De&lete Folder";
+			this.mnuDeleteFolder.Click += new System.EventHandler(this.DeleteFolder_Click);
+			// 
+			// lblProgressImage
+			// 
+			this.lblProgressImage.AutoSize = false;
+			this.lblProgressImage.Image = global::DiskUsage.Properties.Resources.FileSearch;
+			this.lblProgressImage.Name = "lblProgressImage";
+			this.lblProgressImage.Size = new System.Drawing.Size(30, 17);
+			this.lblProgressImage.Visible = false;
 			// 
 			// MainForm
 			// 
@@ -555,6 +627,14 @@ namespace DiskUsage
 		private ToolStripMenuItem mnuOpenFolderInTerminal2;
 		private ToolStripMenuItem mnuSelectFolderInFileExplorer2;
 		private ToolStripMenuItem mnuDeleteFolder2;
+		private ToolStripMenuItem mnuCopyFolderName;
+		private ToolStripMenuItem mnuCopyFolderPath;
+		private ToolStripSeparator toolStripMenuItem5;
+		private ToolStripSeparator toolStripMenuItem1;
+		private ToolStripMenuItem mnuCopyFolderName2;
+		private ToolStripMenuItem mnuCopyFolderPath2;
+		private ToolStripSeparator toolStripMenuItem7;
+		private ToolStripSeparator toolStripMenuItem6;
 	}
 }
 

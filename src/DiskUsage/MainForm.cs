@@ -99,6 +99,10 @@ namespace DiskUsage
 				this.mnuSelectFolderInFileExplorer2.Enabled = directorySelected && hasParent;
 				this.mnuDeleteFolder.Enabled = directorySelected && hasParent;
 				this.mnuDeleteFolder2.Enabled = directorySelected && hasParent;
+				this.mnuCopyFolderName.Enabled = directorySelected;
+				this.mnuCopyFolderName2.Enabled = directorySelected;
+				this.mnuCopyFolderPath.Enabled = directorySelected;
+				this.mnuCopyFolderPath2.Enabled = directorySelected;
 
 				this.Progress.Visible = scanning;
 				this.lblProgressImage.Visible = scanning;
@@ -826,6 +830,22 @@ namespace DiskUsage
 			catch (COMException)
 			{
 				// There's nothing we can do here.  This occurs if the browser is still navigating to the previous URI and can't stop.
+			}
+		}
+
+		private void CopyFolderName_Click(object sender, EventArgs e)
+		{
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
+			{
+				Clipboard.SetText(selectedData.Name);
+			}
+		}
+
+		private void CopyFolderPath_Click(object sender, EventArgs e)
+		{
+			if (IsNodeADirectory(this.Tree.SelectedNode, out DirectoryData? selectedData))
+			{
+				Clipboard.SetText(selectedData.FullName);
 			}
 		}
 
